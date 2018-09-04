@@ -1,7 +1,7 @@
 package com.tambapps
 
-import com.tambapps.analyzor.LexicalAnalyzer
+import com.tambapps.analyzer.LexicalAnalyzer
 
 LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
 
-println lexicalAnalyzer.toTokens("aa + 2 - 45 + zeze")
+println lexicalAnalyzer.toTokens("aa+ 45")

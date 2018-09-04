@@ -1,4 +1,4 @@
-package com.tambapps.analyzor
+package com.tambapps.analyzer
 
 class Token {
 

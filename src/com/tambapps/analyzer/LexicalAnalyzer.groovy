@@ -1,7 +1,7 @@
-package com.tambapps.analyzor
+package com.tambapps.analyzer
 
 import com.tambapps.exception.UnsupportedCharacterException
-import com.tambapps.util.Automate
+import com.tambapps.util.LogicalController
 import com.tambapps.util.ReturnTable
 import com.tambapps.util.TransitionTable
 
@@ -16,7 +16,7 @@ class LexicalAnalyzer {
         OPERATORS = OPERATOR_STATE_MAP.keySet()
     }
 
-    //automate stuff
+    //logical controller stuff
     private static final Collection<Character> OPERATORS
     private static final Map<Character, Integer> OPERATOR_STATE_MAP = new HashMap<>() //map an operator to its corresponding state
     private static final int INITIAL_STATE = 0
@@ -34,23 +34,23 @@ class LexicalAnalyzer {
     } as ReturnTable
 
     private static final Character SPACE = ' ' as Character
-    private static final Character LINE_RETURN = '\n' as Character
+    private static final Character LINE_BREAK = '\n' as Character
 
-    private final Automate<TokenType> automate
+    private final LogicalController<TokenType> logicalController
 
     LexicalAnalyzer() {
-        automate = new Automate(TRANSITION_TABLE, RETURN_TABLE)
+        logicalController = new LogicalController(TRANSITION_TABLE, RETURN_TABLE)
     }
 
     List<Token> toTokens(String content) {
-        content = content + LINE_RETURN //add line return to simulate end of file
+        content = content + LINE_BREAK //add line return to simulate end of file
         List<Token> tokens = new ArrayList<>(content.size())
         int col = 0
         int lig = 0
         List<Character> characters = new ArrayList<>()
         for (int i = 0; i < content.size(); i++) {
             char c = content.charAt(i)
-            if (!c.isWhitespace() && !(c == LINE_RETURN)) {
+            if (!c.isWhitespace() && !(c == LINE_BREAK)) {
                 characters.add(c)
             }
             Token token = processCharacter(characters, c, col, lig)
@@ -58,7 +58,7 @@ class LexicalAnalyzer {
                 tokens.add(token)
                 characters.clear()
             }
-            if (c == LINE_RETURN) {
+            if (c == LINE_BREAK) {
                 lig++
                 col = 0
             } else {
@@ -69,7 +69,7 @@ class LexicalAnalyzer {
     }
 
     private Token processCharacter(List<Character> characters, char c, int col, int lig) {
-        TokenType type = automate.act(c)
+        TokenType type = logicalController.act(c)
         if (type != null) {
             String value = characters.stream()
                     .map({ch -> String.valueOf(ch)})
@@ -116,7 +116,7 @@ class LexicalAnalyzer {
                     return IDENTIFIER_STATE
                 } else if (OPERATORS.contains(entry)) {
                     return OPERATOR_STATE_MAP.get(entry)
-                } else if (entry == SPACE || entry == LINE_RETURN) { //== in groovy calls .equals() ??
+                } else if (entry == SPACE || entry == LINE_BREAK) { //== in groovy calls .equals() ??
                     return INITIAL_STATE
                 }
                 break
@@ -124,14 +124,14 @@ class LexicalAnalyzer {
             case IDENTIFIER_STATE:
                 if (entry.isDigit() || entry.isLetter()) {
                     return IDENTIFIER_STATE
-                } else if (entry == SPACE || entry == LINE_RETURN) {
+                } else if (entry == SPACE || entry == LINE_BREAK) {
                     return INITIAL_STATE
                 }
                 break
             case CONSTANT_STATE:
                 if (entry.isDigit()) {
                     return CONSTANT_STATE
-                } else if (entry == SPACE || entry == LINE_RETURN) {
+                } else if (entry == SPACE || entry == LINE_BREAK) {
                     return INITIAL_STATE
                 } else {
                     throw new IllegalStateException("Syntax error") //TODO indiquer ligne col
@@ -144,7 +144,7 @@ class LexicalAnalyzer {
 
         }
 
-        throw new UnsupportedCharacterException("Coudln't resolve character $entry at ...") //TODO indiquer ligne et col
+        throw new IllegalStateException("Illegal character '$entry' encountered") //TODO indiquer ligne et col
     }
 
 }

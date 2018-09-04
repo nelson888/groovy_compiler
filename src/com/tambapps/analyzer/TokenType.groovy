@@ -1,4 +1,4 @@
-package com.tambapps.analyzor
+package com.tambapps.analyzer
 
 enum TokenType {
     IDENTIFIER, CONSTANT, PLUS, MINUS;
