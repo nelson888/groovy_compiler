@@ -1,5 +1,7 @@
 package com.tambapps.analyzer
 
+import com.tambapps.exception.IllegalTransitionStateException
+import com.tambapps.exception.LexicalException
 import com.tambapps.util.LogicalController
 import com.tambapps.util.ReturnTable
 import com.tambapps.util.TransitionTable
@@ -60,7 +62,13 @@ class LexicalAnalyzer {
             if (!c.isWhitespace() && !(c == LINE_BREAK)) {
                 valueBuilder.append(c)
             }
-            Token token = logicalController.act(c)
+            Token token
+            try {
+                token = logicalController.act(c)
+            } catch (IllegalTransitionStateException e) {
+                throw new LexicalException("Lexical error at l:$lig c:$col\n$e.message", e)
+            }
+
             if (token) {
                 tokens.add(token)
                 valueBuilder.setLength(0) //clear the string builder
@@ -131,7 +139,7 @@ class LexicalAnalyzer {
                 } else if (entry == SPACE || entry == LINE_BREAK) {
                     return INITIAL_STATE
                 } else {
-                    throw new IllegalStateException("Syntax error") //TODO indiquer ligne col
+                    throw new IllegalTransitionStateException("Syntax error") //TODO indiquer ligne col
                 }
                 break
 
@@ -141,12 +149,12 @@ class LexicalAnalyzer {
             case DIVIDE_STATE:
             case MODULO_STATE:
                 if (entry in (['*', '/', '%'] as Character[])) {
-                    throw new IllegalStateException("Cannot have two operator")
+                    throw new IllegalTransitionStateException("Cannot have two operator")
                 }
                 return INITIAL_STATE
         }
 
-        throw new IllegalStateException("Illegal character '$entry' encountered") //TODO indiquer ligne et col
+        throw new IllegalTransitionStateException("Illegal character '$entry' encountered") //TODO indiquer ligne et col
     }
 
 }
