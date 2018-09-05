@@ -23,7 +23,7 @@ class LexicalAnalyzer {
     private static final Collection<Character> OPERATORS
     private static final Map<Character, Integer> OPERATOR_STATE_MAP = new HashMap<>() //map an operator to its corresponding state
     private static final int INITIAL_STATE = 0
-    private static final int IDENTIFIER_STATE = 1
+    private static final int WORD_STATE = 1
     private static final int CONSTANT_STATE = 2
     private static final int PLUS_STATE = 3
     private static final int MINUS_STATE = 4
@@ -45,6 +45,8 @@ class LexicalAnalyzer {
 
     private final LogicalController<Token> logicalController
     private final StringBuilder valueBuilder = new StringBuilder()
+    private int col
+    private int lig
 
     LexicalAnalyzer() {
         logicalController = new LogicalController(transitionTable, returnTable)
@@ -57,9 +59,6 @@ class LexicalAnalyzer {
     List<Token> toTokens(String content) {
         List<Token> tokens = new ArrayList<>()
         content = content + LINE_BREAK //add line return to simulate end of file
-
-        int col = 0
-        int lig = 0
 
         for (int i = 0; i < content.size(); i++) {
             char c = content.charAt(i)
@@ -92,25 +91,30 @@ class LexicalAnalyzer {
 
     private Token returnValue(int currentState, int nextState) {
         String value = valueBuilder.toString()
+        final int col = this.col - value.size()
         switch (currentState) {
             case INITIAL_STATE:
                 return null
-            case IDENTIFIER_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.IDENTIFIER, value) : null
+            case WORD_STATE:
+                TokenType t = TokenType.KEYWORDS_MAP.getOrDefault(value, TokenType.IDENTIFIER)
+                if (nextState != currentState) {
+                    return t == TokenType.IDENTIFIER ? Token.of(t, value, col, lig) : Token.of(t, col, lig)
+                }
+                return null
             case CONSTANT_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.CONSTANT, Integer.parseInt(value)) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.CONSTANT, Integer.parseInt(value), col, lig) : null
             case PLUS_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.PLUS) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.PLUS, col, lig) : null
             case MINUS_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.MINUS) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MINUS, col, lig) : null
             case DIVIDE_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.DIVIDE) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.DIVIDE, col, lig) : null
             case MULTIPLY_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.MULTIPLY) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MULTIPLY, col, lig) : null
             case POWER_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.POWER) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.POWER, col, lig) : null
             case MODULO_STATE:
-                return nextState == INITIAL_STATE ? Token.of(TokenType.MODULO) : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MODULO, col, lig) : null
         }
         return null
     }
@@ -121,7 +125,7 @@ class LexicalAnalyzer {
                 if (entry.isDigit()) {
                     return CONSTANT_STATE
                 } else if (entry.isLetter()) {
-                    return IDENTIFIER_STATE
+                    return WORD_STATE
                 } else if (entry in OPERATORS) {
                     return OPERATOR_STATE_MAP.get(entry)
                 } else if (entry == SPACE || entry == LINE_BREAK) { //== in groovy calls .equals() ??
@@ -129,9 +133,9 @@ class LexicalAnalyzer {
                 }
                 break
 
-            case IDENTIFIER_STATE:
+            case WORD_STATE:
                 if (entry.isDigit() || entry.isLetter()) {
-                    return IDENTIFIER_STATE
+                    return WORD_STATE
                 } else if (entry == SPACE || entry == LINE_BREAK) {
                     return INITIAL_STATE
                 }

@@ -19,11 +19,11 @@ class Token {
         return joiner.toString()
     }
 
-    static Token of(TokenType type) {
-        return new Token(type: type)
+    static Token of(TokenType type, int c, int l) {
+        return new Token(type: type, c:c, l:l)
     }
 
-    static Token of(TokenType type, def value) {
-        return new Token(type: type, value: value)
+    static Token of(TokenType type, def value, int c, int l) {
+        return new Token(type: type, value: value, c:c, l:l)
     }
 }
