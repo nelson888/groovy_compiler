@@ -1,11 +1,8 @@
 package com.tambapps.analyzer
 
-import com.tambapps.exception.UnsupportedCharacterException
 import com.tambapps.util.LogicalController
 import com.tambapps.util.ReturnTable
 import com.tambapps.util.TransitionTable
-
-import java.util.stream.Collectors
 
 class LexicalAnalyzer {
 
@@ -25,38 +22,40 @@ class LexicalAnalyzer {
     private static final int PLUS_STATE = 3
     private static final int MINUS_STATE = 4
 
-    private static final TransitionTable TRANSITION_TABLE = { int currentState, char entry ->
+    private final TransitionTable transitionTable = { int currentState, char entry ->
         nextState(currentState, entry)
     } as TransitionTable
 
-    private static final ReturnTable RETURN_TABLE  = { int currentState, int nextState ->
+    private final ReturnTable<Token> returnTable = { int currentState, int nextState ->
         returnValue(currentState, nextState)
-    } as ReturnTable
+    } as ReturnTable<Token>
 
     private static final Character SPACE = ' ' as Character
     private static final Character LINE_BREAK = '\n' as Character
 
-    private final LogicalController<TokenType> logicalController
+    private final LogicalController<Token> logicalController
+    private final StringBuilder valueBuilder = new StringBuilder()
 
     LexicalAnalyzer() {
-        logicalController = new LogicalController(TRANSITION_TABLE, RETURN_TABLE)
+        logicalController = new LogicalController(transitionTable, returnTable)
     }
 
     List<Token> toTokens(String content) {
+        List<Token> tokens = new ArrayList<>()
         content = content + LINE_BREAK //add line return to simulate end of file
-        List<Token> tokens = new ArrayList<>(content.size())
+
         int col = 0
         int lig = 0
-        List<Character> characters = new ArrayList<>()
+
         for (int i = 0; i < content.size(); i++) {
             char c = content.charAt(i)
             if (!c.isWhitespace() && !(c == LINE_BREAK)) {
-                characters.add(c)
+                valueBuilder.append(c)
             }
-            Token token = processCharacter(characters, c, col, lig)
+            Token token = logicalController.act(c)
             if (token) {
                 tokens.add(token)
-                characters.clear()
+                valueBuilder.setLength(0) //clear the string builder
             }
             if (c == LINE_BREAK) {
                 lig++
@@ -68,41 +67,23 @@ class LexicalAnalyzer {
         return tokens
     }
 
-    private Token processCharacter(List<Character> characters, char c, int col, int lig) {
-        TokenType type = logicalController.act(c)
-        if (type != null) {
-            String value = characters.stream()
-                    .map({ch -> String.valueOf(ch)})
-                    .collect(Collectors.joining())
-            Token token = new Token(type: type, c: col - characters.size(), l: lig)
-            if (type == TokenType.CONSTANT) {
-                token.setValue(Long.parseLong(value))
-            } else if (type == TokenType.IDENTIFIER) {
-                token.setValue(value)
-            }
-
-            return token
-        }
-
-        return null
-    }
-
     Token[] toTokens(File file) {
         return toTokens(file.getText())
     }
 
-    private static TokenType returnValue(int currentState, int nextState) {
+    private Token returnValue(int currentState, int nextState) {
+        String value = valueBuilder.toString()
         switch (currentState) {
             case INITIAL_STATE:
                 return null
             case IDENTIFIER_STATE:
-                return nextState == INITIAL_STATE ? TokenType.IDENTIFIER : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.IDENTIFIER, value) : null
             case CONSTANT_STATE:
-                return nextState == INITIAL_STATE ? TokenType.CONSTANT : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.CONSTANT, Integer.parseInt(value)) : null
             case PLUS_STATE:
-                return nextState == INITIAL_STATE ? TokenType.PLUS : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.PLUS) : null
             case MINUS_STATE:
-                return nextState == INITIAL_STATE ? TokenType.MINUS : null
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MINUS) : null
         }
         return null
     }

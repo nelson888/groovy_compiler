@@ -19,4 +19,11 @@ class Token {
         return joiner.toString()
     }
 
+    static Token of(TokenType type) {
+        return new Token(type: type)
+    }
+
+    static Token of(TokenType type, def value) {
+        return new Token(type: type, value: value)
+    }
 }

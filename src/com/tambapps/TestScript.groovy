@@ -4,4 +4,4 @@ import com.tambapps.analyzer.LexicalAnalyzer
 
 LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
 
-println lexicalAnalyzer.toTokens("aa+ 45")
+println lexicalAnalyzer.toTokens("aa + 45")
