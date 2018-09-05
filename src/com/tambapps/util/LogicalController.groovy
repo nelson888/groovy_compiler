@@ -26,4 +26,8 @@ class LogicalController<T> {
     int getState() {
         return currentState
     }
+
+    void setState(int state) {
+        this.currentState = state
+    }
 }
