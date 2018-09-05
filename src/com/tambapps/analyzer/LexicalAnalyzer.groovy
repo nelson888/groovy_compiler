@@ -9,7 +9,11 @@ class LexicalAnalyzer {
     static {
         OPERATOR_STATE_MAP.put('+' as Character, PLUS_STATE)
         OPERATOR_STATE_MAP.put('-' as Character, MINUS_STATE)
-        //TODO add others operators
+        OPERATOR_STATE_MAP.put('/' as Character, DIVIDE_STATE)
+        OPERATOR_STATE_MAP.put('*' as Character, MULTIPLY_STATE)
+        OPERATOR_STATE_MAP.put('^' as Character, POWER_STATE)
+        OPERATOR_STATE_MAP.put('%' as Character, MODULO_STATE)
+
         OPERATORS = OPERATOR_STATE_MAP.keySet()
     }
 
@@ -21,6 +25,10 @@ class LexicalAnalyzer {
     private static final int CONSTANT_STATE = 2
     private static final int PLUS_STATE = 3
     private static final int MINUS_STATE = 4
+    private static final int DIVIDE_STATE = 5
+    private static final int MULTIPLY_STATE = 6
+    private static final int POWER_STATE = 7
+    private static final int MODULO_STATE = 8
 
     private final TransitionTable transitionTable = { int currentState, char entry ->
         nextState(currentState, entry)
@@ -84,6 +92,14 @@ class LexicalAnalyzer {
                 return nextState == INITIAL_STATE ? Token.of(TokenType.PLUS) : null
             case MINUS_STATE:
                 return nextState == INITIAL_STATE ? Token.of(TokenType.MINUS) : null
+            case DIVIDE_STATE:
+                return nextState == INITIAL_STATE ? Token.of(TokenType.DIVIDE) : null
+            case MULTIPLY_STATE:
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MULTIPLY) : null
+            case POWER_STATE:
+                return nextState == INITIAL_STATE ? Token.of(TokenType.POWER) : null
+            case MODULO_STATE:
+                return nextState == INITIAL_STATE ? Token.of(TokenType.MODULO) : null
         }
         return null
     }
@@ -95,7 +111,7 @@ class LexicalAnalyzer {
                     return CONSTANT_STATE
                 } else if (entry.isLetter()) {
                     return IDENTIFIER_STATE
-                } else if (OPERATORS.contains(entry)) {
+                } else if (entry in OPERATORS) {
                     return OPERATOR_STATE_MAP.get(entry)
                 } else if (entry == SPACE || entry == LINE_BREAK) { //== in groovy calls .equals() ??
                     return INITIAL_STATE
@@ -121,8 +137,13 @@ class LexicalAnalyzer {
 
             case PLUS_STATE:
             case MINUS_STATE:
+            case MULTIPLY_STATE:
+            case DIVIDE_STATE:
+            case MODULO_STATE:
+                if (entry in (['*', '/', '%'] as Character[])) {
+                    throw new IllegalStateException("Cannot have two operator")
+                }
                 return INITIAL_STATE
-
         }
 
         throw new IllegalStateException("Illegal character '$entry' encountered") //TODO indiquer ligne et col
