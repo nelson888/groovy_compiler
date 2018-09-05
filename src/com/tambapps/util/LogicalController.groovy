@@ -2,9 +2,9 @@ package com.tambapps.util
 
 class LogicalController<T> {
 
-    TransitionTable transitionTable
-    ReturnTable<T> returnTable
-    int currentState
+    private TransitionTable transitionTable
+    private ReturnTable<T> returnTable
+    private int currentState
 
     LogicalController(TransitionTable transitionTable, ReturnTable<T> returnTable) {
         this.transitionTable = transitionTable
@@ -23,4 +23,7 @@ class LogicalController<T> {
         return null
     }
 
+    int getState() {
+        return currentState
+    }
 }

@@ -50,6 +50,10 @@ class LexicalAnalyzer {
         logicalController = new LogicalController(transitionTable, returnTable)
     }
 
+    Token[] toTokens(File file) {
+        return toTokens(file.getText())
+    }
+
     List<Token> toTokens(String content) {
         List<Token> tokens = new ArrayList<>()
         content = content + LINE_BREAK //add line return to simulate end of file
@@ -80,11 +84,10 @@ class LexicalAnalyzer {
                 col++
             }
         }
+        if (logicalController.getState() != INITIAL_STATE) {
+            throw new LexicalException("Unexpected end of file")
+        }
         return tokens
-    }
-
-    Token[] toTokens(File file) {
-        return toTokens(file.getText())
     }
 
     private Token returnValue(int currentState, int nextState) {
@@ -139,7 +142,7 @@ class LexicalAnalyzer {
                 } else if (entry == SPACE || entry == LINE_BREAK) {
                     return INITIAL_STATE
                 } else {
-                    throw new IllegalTransitionStateException("Syntax error") //TODO indiquer ligne col
+                    throw new IllegalTransitionStateException("Syntax error")
                 }
                 break
 
@@ -154,7 +157,7 @@ class LexicalAnalyzer {
                 return INITIAL_STATE
         }
 
-        throw new IllegalTransitionStateException("Illegal character '$entry' encountered") //TODO indiquer ligne et col
+        throw new IllegalTransitionStateException("Illegal character '$entry' encountered")
     }
 
 }

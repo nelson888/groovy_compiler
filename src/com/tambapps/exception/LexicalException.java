@@ -6,4 +6,8 @@ public class LexicalException extends RuntimeException {
     super(message, cause);
   }
 
+  public LexicalException(String message) {
+    super(message);
+  }
+
 }
