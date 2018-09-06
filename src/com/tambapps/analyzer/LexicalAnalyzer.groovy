@@ -27,14 +27,15 @@ class LexicalAnalyzer {
 
     private static final Character SPACE = ' ' as Character
     private static final Character LINE_BREAK = '\n' as Character
-    private static final Character[] SINGLE_CHAR_SYMBOLS =  ['(', ')', '+', '-', '*', '/', ',', '%', '^', ';', '{', '}'] as Character[]
+    private static final Character EQUAL = '=' as Character
+    private static final Character[] SINGLE_CHAR_SYMBOLS =  ['(', ')', '+', '-', '*', '/', ',', '%', '^', ';', '{', '}', '!'] as Character[]
 
     private final LogicalController<Token> logicalController
     private final StringBuilder valueBuilder = new StringBuilder()
     private int col
     private int lig
     private boolean keepLast = false
-    private boolean isCurrentCharVisible = false
+    private Character nextChar
 
     LexicalAnalyzer() {
         logicalController = new LogicalController(transitionTable, returnTable)
@@ -53,7 +54,7 @@ class LexicalAnalyzer {
 
         for (int i = 0; i < content.size(); i++) {
             char c = content.charAt(i)
-            if ((isCurrentCharVisible = !c.isWhitespace() && !(c == LINE_BREAK))) {
+            if (!c.isWhitespace() && !(c == LINE_BREAK)) {
                 valueBuilder.append(c)
             }
             Token token
@@ -84,23 +85,34 @@ class LexicalAnalyzer {
         return tokens
     }
 
-    private String truncateLast(String s) {
+    private static String truncateLast(String s) {
         return s.substring(0, s.length() - 1)
     }
 
     private Token returnValue(int currentState, int nextState) {
         String value = valueBuilder.toString()
-        final int col = this.col - value.size()
+        int col = this.col - value.size()
+        keepLast = false
 
         switch (currentState) {
             case INITIAL_STATE:
-                return null
+                if (nextState == INITIAL_STATE && !isInvisibleChar(nextChar)) {
+                    TokenType t = TokenType.SYMBOLS_MAP.get(value)
+                    if (t == null) {
+                        throw new UnknownSymbolException("Couldn't resolve symbol: $value")
+                    }
+                    return Token.of(t, col, lig)
+                } else {
+                    return null
+                }
+
             case WORD_STATE:
                 String name
 
                 if (nextState == SYMBOL_STATE) {
                     name = truncateLast(value)
                     keepLast = true
+                    col++
                 } else if (nextState == INITIAL_STATE) {
                     name = value
                 } else  {
@@ -108,19 +120,20 @@ class LexicalAnalyzer {
                 }
 
                 TokenType t = TokenType.KEYWORDS_MAP.getOrDefault(name, TokenType.IDENTIFIER)
-                return t == TokenType.IDENTIFIER ? Token.of(t, name, keepLast ? col + 1 : col, lig) : Token.of(t, keepLast ? col + 1 : col, lig)
+                return t == TokenType.IDENTIFIER ? Token.of(t, name, col, lig) : Token.of(t, col, lig)
 
             case CONSTANT_STATE:
                 Integer number
                 if (nextState == SYMBOL_STATE) {
                     number = Integer.parseInt(truncateLast(value))
                     keepLast = true
+                    col++
                 } else if (nextState == INITIAL_STATE) {
                     number = Integer.parseInt(value)
                 } else {
                     return null
                 }
-                return Token.of(TokenType.CONSTANT, number, keepLast ? col + 1 : col, lig)
+                return Token.of(TokenType.CONSTANT, number, col, lig)
 
             case SYMBOL_STATE:
                 TokenType t
@@ -128,23 +141,19 @@ class LexicalAnalyzer {
                     String symbol = truncateLast(value)
                     t = TokenType.SYMBOLS_MAP.getOrDefault(symbol, null)
                     keepLast = true
+                    col++
                 } else if (nextState == INITIAL_STATE) {
-                    t = TokenType.SYMBOLS_MAP.getOrDefault(isCurrentCharVisible ? truncateLast(value) : value, null)
-                    keepLast = Boolean.valueOf(isCurrentCharVisible)
-                } else if (nextState == SYMBOL_STATE) {
-                    if (value.charAt(0) in SINGLE_CHAR_SYMBOLS) {
-                        keepLast = true
-                        t = TokenType.SYMBOLS_MAP.get(value.charAt(0).toString())
-                    } else {
-                        return null
-                    }
-
+                    t = TokenType.SYMBOLS_MAP.getOrDefault(value, null)
+                } else { // nextState == SYMBOL_STATE
+                    t = TokenType.SYMBOLS_MAP.get(truncateLast(value))
+                    keepLast = true
+                    col++
                 }
 
                 if (t == null) {
                     throw new UnknownSymbolException("Couldn't resolve symbol: $value")
                 }
-                return Token.of(t, keepLast ? col + 1 : col, lig)
+                return Token.of(t, col, lig)
         }
         return null
     }
@@ -153,14 +162,15 @@ class LexicalAnalyzer {
         return c == SPACE || c == LINE_BREAK
     }
 
-    private static int nextState(int currentState, Character entry) {
+    private int nextState(int currentState, Character entry) {
+        nextChar = entry
         switch (currentState) {
             case INITIAL_STATE:
                 if (entry.isDigit()) {
                     return CONSTANT_STATE
                 } else if (entry.isLetter()) {
                     return WORD_STATE
-                } else if (isInvisibleChar(entry)) {
+                } else if (isInvisibleChar(entry) || entry in SINGLE_CHAR_SYMBOLS) {
                     return INITIAL_STATE
                 } else {
                     return SYMBOL_STATE
@@ -182,15 +192,20 @@ class LexicalAnalyzer {
                     return INITIAL_STATE
                 } else if (!entry.isLetter()) {
                     return SYMBOL_STATE
+                } else {
+                    throw new IllegalTransitionStateException("Cannot have a character  next to a number encountered")
+
                 }
                 break
             case SYMBOL_STATE:
-                if (isInvisibleChar(entry)) {
+                if (isInvisibleChar(entry) || entry == EQUAL) {
                     return INITIAL_STATE
                 } else if (entry.isLetter()) {
                     return WORD_STATE
                 } else if (entry.isDigit()) {
                     return CONSTANT_STATE
+                } else if (isInvisibleChar(entry)) {
+                    return INITIAL_STATE
                 } else {
                     return SYMBOL_STATE
                 }
@@ -204,7 +219,6 @@ class LexicalAnalyzer {
         col = 0
         valueBuilder.clear()
         keepLast = false
-        isCurrentCharVisible = false
         logicalController.setState(INITIAL_STATE)
     }
 }

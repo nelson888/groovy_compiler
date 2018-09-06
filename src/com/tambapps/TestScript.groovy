@@ -1,18 +1,19 @@
 package com.tambapps
 
 import com.tambapps.analyzer.LexicalAnalyzer
-import com.tambapps.analyzer.SyntaxicAnalyzer
+import com.tambapps.analyzer.Parser
 import com.tambapps.analyzer.token.Token
 
 LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
-List<Token> tokens = lexicalAnalyzer.toTokens("+-+-2")
+
+List<Token> tokens = lexicalAnalyzer.toTokens("+ -+-234")
 println "Tokens:"
 println tokens
 
-SyntaxicAnalyzer syntaxicAnalyzer = new SyntaxicAnalyzer(tokens)
+Parser parser = new Parser(tokens)
 
 println "TokenNode tree"
-println syntaxicAnalyzer.atome().treeString()
+println parser.parse().treeString()
 
 /*
 println lexicalAnalyzer.toTokens("while(a){b=4+a-23;}")

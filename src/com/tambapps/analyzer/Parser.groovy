@@ -5,20 +5,24 @@ import com.tambapps.analyzer.token.TokenNode
 import com.tambapps.analyzer.token.TokenNodeType
 import com.tambapps.analyzer.token.TokenType
 
-class SyntaxicAnalyzer {
+class Parser { //Analyseur syntaxique
 
     private final List<Token> tokens
     private int currentIndex
 
-    SyntaxicAnalyzer(Token[] tokens) {
+    Parser(Token[] tokens) {
         this(Arrays.asList(tokens))
     }
 
-    SyntaxicAnalyzer(List<Token> tokens) {
+    Parser(List<Token> tokens) {
         this.tokens = tokens
     }
 
-    TokenNode atome() {
+    TokenNode parse() {
+        return atome()
+    }
+
+    private TokenNode atome() {
         Token t = tokens.get(currentIndex)
         switch (t.type) {
             case TokenType.CONSTANT:
