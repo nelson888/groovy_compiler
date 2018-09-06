@@ -1,5 +1,7 @@
 package com.tambapps.analyzer
 
+import com.tambapps.analyzer.token.Token
+import com.tambapps.analyzer.token.TokenType
 import com.tambapps.exception.IllegalTransitionStateException
 import com.tambapps.exception.LexicalException
 import com.tambapps.exception.UnknownSymbolException
@@ -41,7 +43,7 @@ class LexicalAnalyzer {
         }
     }
 
-    Token[] toTokens(File file) {
+    List<Token> toTokens(File file) {
         return toTokens(file.getText())
     }
 
