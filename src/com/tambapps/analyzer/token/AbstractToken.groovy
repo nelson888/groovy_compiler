@@ -4,6 +4,7 @@ import groovy.transform.PackageScope
 
 @PackageScope
 abstract class AbstractToken {
+
     final int l
     final int c
     final def value
@@ -32,4 +33,5 @@ abstract class AbstractToken {
     }
 
     abstract def getType()
+
 }

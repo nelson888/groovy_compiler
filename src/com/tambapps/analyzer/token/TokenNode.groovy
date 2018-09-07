@@ -36,20 +36,28 @@ class TokenNode extends AbstractToken {
 
     String treeString() {
         StringBuilder builder = new StringBuilder()
-        toStringBuilder(builder, this,  0)
+        toStringBuilder(builder, this,  0, new ArrayList<Integer>())
         return builder.toString()
     }
 
-    private static void toStringBuilder(StringBuilder builder, TokenNode node, int l) {
+    private static void toStringBuilder(StringBuilder builder, TokenNode node, int l, List<Integer> branchesIndex) {
         appenNTimes(builder, l, '__')
         builder.append(node.toString())
                 .append('\n')
         int children = node.nbChildren()
+        int nbSpaces = 2 * ( l + l * 2 + (l * (l - 1))/2) as int //magic formula to print well
+        branchesIndex.add(nbSpaces)
         if (children > 0) {
             for (int i = 0; i < children; i++) {
-                appenNTimes(builder, l + l * 2 + (l * (l - 1))/2 as int, '  ') //magic formula to print well
+                for (int j = 0; j < nbSpaces; j++) {
+                    if (j in branchesIndex) {
+                        builder.append('|')
+                    } else {
+                        builder.append(' ')
+                    }
+                }
                 builder.append('|')
-                toStringBuilder(builder, node.getChild(i), l + 1)
+                toStringBuilder(builder, node.getChild(i), l + 1, branchesIndex)
             }
         }
 
@@ -60,4 +68,5 @@ class TokenNode extends AbstractToken {
             builder.append(s)
         }
     }
+
 }

@@ -17,10 +17,8 @@ class LogicalController<T> {
         T value = returnTable.getReturnValue(currentState, nextState)
 
         currentState = nextState
-        if (value != null) {
-            return value
-        }
-        return null
+
+        return value
     }
 
     int getState() {
@@ -30,4 +28,5 @@ class LogicalController<T> {
     void setState(int state) {
         this.currentState = state
     }
+
 }

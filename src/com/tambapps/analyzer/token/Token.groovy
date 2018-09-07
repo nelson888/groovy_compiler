@@ -21,4 +21,5 @@ class Token extends AbstractToken {
     static Token of(TokenType type, def value, int c, int l) {
         return new Token(l, c, value, type)
     }
+
 }

@@ -223,4 +223,5 @@ class LexicalAnalyzer {
         keepLast = false
         logicalController.setState(INITIAL_STATE)
     }
+
 }
