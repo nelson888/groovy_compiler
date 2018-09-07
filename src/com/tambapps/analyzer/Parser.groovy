@@ -4,6 +4,7 @@ import com.tambapps.analyzer.token.Token
 import com.tambapps.analyzer.token.TokenNode
 import com.tambapps.analyzer.token.TokenNodeType
 import com.tambapps.analyzer.token.TokenType
+import com.tambapps.analyzer.token.TokenUtils
 
 class Parser { //Analyseur syntaxique
 
@@ -23,7 +24,7 @@ class Parser { //Analyseur syntaxique
     }
 
     private TokenNode atome() {
-        Token t = tokens.get(currentIndex)
+        Token t = getCurrent()
         switch (t.type) {
             case TokenType.CONSTANT:
                 moveForward()
@@ -34,7 +35,7 @@ class Parser { //Analyseur syntaxique
             case TokenType.NOT:
                 moveForward()
                 TokenNode node = atome()
-                return new TokenNode(TokenNodeType.UNARY_OPERATOR_MAP.get(t.type), t, [node])
+                return new TokenNode(TokenUtils.UNARY_OPERATOR_MAP.get(t.type), t, [node])
         }
 
         throw new RuntimeException("Token type $t is not handled")

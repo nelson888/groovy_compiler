@@ -2,6 +2,7 @@ package com.tambapps.analyzer
 
 import com.tambapps.analyzer.token.Token
 import com.tambapps.analyzer.token.TokenType
+import com.tambapps.analyzer.token.TokenUtils
 import com.tambapps.exception.IllegalTransitionStateException
 import com.tambapps.exception.LexicalException
 import com.tambapps.exception.UnknownSymbolException
@@ -97,7 +98,7 @@ class LexicalAnalyzer {
         switch (currentState) {
             case INITIAL_STATE:
                 if (nextState == INITIAL_STATE && !isInvisibleChar(nextChar)) {
-                    TokenType t = TokenType.SYMBOLS_MAP.get(value)
+                    TokenType t = TokenUtils.SYMBOLS_MAP.get(value)
                     if (t == null) {
                         throw new UnknownSymbolException("Couldn't resolve symbol: $value")
                     }
@@ -119,7 +120,7 @@ class LexicalAnalyzer {
                     return null
                 }
 
-                TokenType t = TokenType.KEYWORDS_MAP.getOrDefault(name, TokenType.IDENTIFIER)
+                TokenType t = TokenUtils.KEYWORDS_MAP.getOrDefault(name, TokenType.IDENTIFIER)
                 return t == TokenType.IDENTIFIER ? Token.of(t, name, col, lig) : Token.of(t, col, lig)
 
             case CONSTANT_STATE:
@@ -139,13 +140,13 @@ class LexicalAnalyzer {
                 TokenType t
                 if (nextState == WORD_STATE || nextState == CONSTANT_STATE) {
                     String symbol = truncateLast(value)
-                    t = TokenType.SYMBOLS_MAP.getOrDefault(symbol, null)
+                    t = TokenUtils.SYMBOLS_MAP.getOrDefault(symbol, null)
                     keepLast = true
                     col++
                 } else if (nextState == INITIAL_STATE) {
-                    t = TokenType.SYMBOLS_MAP.getOrDefault(value, null)
+                    t = TokenUtils.SYMBOLS_MAP.getOrDefault(value, null)
                 } else { // nextState == SYMBOL_STATE
-                    t = TokenType.SYMBOLS_MAP.get(truncateLast(value))
+                    t = TokenUtils.SYMBOLS_MAP.get(truncateLast(value))
                     keepLast = true
                     col++
                 }

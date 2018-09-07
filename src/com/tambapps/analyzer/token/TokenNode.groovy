@@ -11,7 +11,7 @@ class TokenNode extends AbstractToken {
     }
 
     TokenNode(Token token) {
-        this(token, TokenNodeType.TYPE_MAP.get(token.type))
+        this(token, TokenUtils.TYPE_MAP.get(token.type))
     }
 
     TokenNode(TokenNodeType type, Token token, List<TokenNode> children) {
