@@ -4,12 +4,12 @@ class Token extends AbstractToken {
 
     final TokenType type
 
-    Token(int l, int c, value, TokenType type) {
+    private Token(int l, int c, value, TokenType type) {
         super(l, c, value)
         this.type = type
     }
 
-    Token(int l, int c, TokenType type) {
+    private Token(int l, int c, TokenType type) {
         super(l, c, null)
         this.type = type
     }

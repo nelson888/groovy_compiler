@@ -83,6 +83,7 @@ class LexicalAnalyzer {
         if (logicalController.getState() != INITIAL_STATE) {
             throw new LexicalException("Unexpected end of file")
         }
+        tokens.add(Token.of(TokenType.END_OF_FILE, col, lig))
         return tokens
     }
 
