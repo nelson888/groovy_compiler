@@ -44,11 +44,11 @@ class TokenNode extends AbstractToken {
         appenNTimes(builder, l, '__')
         builder.append(node.toString())
                 .append('\n')
-        appenNTimes(builder, l + l * 2 + (l * (l - 1))/2 as int, '  ') //magic formula to print well
         int children = node.nbChildren()
         if (children > 0) {
-            builder.append('|')
-            for (int i = 0; i < node.nbChildren(); i++) {
+            for (int i = 0; i < children; i++) {
+                appenNTimes(builder, l + l * 2 + (l * (l - 1))/2 as int, '  ') //magic formula to print well
+                builder.append('|')
                 toStringBuilder(builder, node.getChild(i), l + 1)
             }
         }
