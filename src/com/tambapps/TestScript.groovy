@@ -6,7 +6,7 @@ import com.tambapps.analyzer.token.Token
 
 LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
 
-List<Token> tokens = lexicalAnalyzer.toTokens("4 + 4 + 4 + 4")
+List<Token> tokens = lexicalAnalyzer.toTokens("4 + -4 + !4 + 4 + 9")
 println "Tokens:"
 println tokens
 

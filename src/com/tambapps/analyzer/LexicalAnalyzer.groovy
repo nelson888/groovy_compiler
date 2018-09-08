@@ -10,6 +10,8 @@ import com.tambapps.util.LogicalController
 import com.tambapps.util.ReturnTable
 import com.tambapps.util.TransitionTable
 
+import java.util.stream.Collectors
+
 class LexicalAnalyzer {
 
     //logical controller stuff
@@ -28,18 +30,24 @@ class LexicalAnalyzer {
 
     private static final Character SPACE = ' ' as Character
     private static final Character LINE_BREAK = '\n' as Character
+    private static final Character TAB = '\r' as Character
     private static final Character EQUAL = '=' as Character
-    private static final Character[] SINGLE_CHAR_SYMBOLS =  ['(', ')', '+', '-', '*', '/', ',', '%', '^', ';', '{', '}', '!'] as Character[]
+    private static final List<Character> SINGLE_CHAR_SYMBOLS =  Arrays.stream(TokenType.values())
+            .filter({t -> t.isOnlySingleCharSymbol()}).map({t -> t.value as Character})
+            .collect(Collectors.toList()) //['(', ')', '+', '-', '*', '/', ',', '%', '^', ';', '{', '}', '!']
 
     private final LogicalController<Token> logicalController
     private final StringBuilder valueBuilder = new StringBuilder()
     private int col
     private int lig
-    private boolean keepLast = false
+    private boolean keepLast
     private Character nextChar
 
     LexicalAnalyzer() {
         logicalController = new LogicalController(transitionTable, returnTable)
+        col = 0
+        lig = 0
+        keepLast = false
         valueBuilder.metaClass.clear { //add method clear() to this instance
             valueBuilder.setLength(0)
         }
@@ -161,7 +169,7 @@ class LexicalAnalyzer {
     }
 
     private static boolean isInvisibleChar(char c) {
-        return c == SPACE || c == LINE_BREAK
+        return c == SPACE || c == LINE_BREAK || c == TAB
     }
 
     private int nextState(int currentState, Character entry) {

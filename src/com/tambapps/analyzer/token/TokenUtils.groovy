@@ -33,31 +33,15 @@ class TokenUtils {
         typeMap.put(TokenType.IDENTIFIER, TokenNodeType.IDENTIFIER)
 
         Map<String, TokenType> keywordsMap = new HashMap<>()
-        for (TokenType t : [TokenType.AND, TokenType.OR, TokenType.IF, TokenType.FOR, TokenType.WHILE]) {
-            keywordsMap.put(t.name().toLowerCase(), t)
-        }
 
         Map<String, TokenType> symbolsMap = new HashMap<>()
-        symbolsMap.put('+', TokenType.PLUS)
-        symbolsMap.put('-', TokenType.MINUS)
-        symbolsMap.put('*', TokenType.MULTIPLY)
-        symbolsMap.put('/', TokenType.DIVIDE)
-        symbolsMap.put('^', TokenType.POWER)
-        symbolsMap.put('%', TokenType.MODULO)
-        symbolsMap.put('=', TokenType.ASSIGNMENT)
-        symbolsMap.put('(', TokenType.PARENT_OPEN)
-        symbolsMap.put(')', TokenType.PARENT_CLOSE)
-        symbolsMap.put('{', TokenType.ACCOLADE_OPEN)
-        symbolsMap.put('}', TokenType.ACCOLADE_CLOSE)
-        symbolsMap.put(',', TokenType.COMMA)
-        symbolsMap.put(';', TokenType.SEMICOLON)
-        symbolsMap.put('==', TokenType.EQUAL)
-        symbolsMap.put('!=', TokenType.NOT_EQUAL)
-        symbolsMap.put('>', TokenType.STRICT_SUP)
-        symbolsMap.put('<', TokenType.STRICT_INF)
-        symbolsMap.put('>=', TokenType.SUP)
-        symbolsMap.put('<=', TokenType.INF)
-
+        for (TokenType t : TokenType.values()) {
+            if (t.isSymbol()) {
+                symbolsMap.put(t.value, t)
+            } else if (t.isKeyWord()) {
+                keywordsMap.put(t.value, t)
+            }
+        }
 
         Map<TokenType, Integer> priorityMap = new HashMap<>()
         priorityMap.put(TokenType.POWER, 1)
