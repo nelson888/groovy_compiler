@@ -36,12 +36,14 @@ class TokenNode extends AbstractToken {
 
     String treeString() {
         StringBuilder builder = new StringBuilder()
-        toStringBuilder(builder, this,  0, new ArrayList<Integer>())
+        treeStringBuilder(builder, this,  0, new HashSet<Integer>())
         return builder.toString()
     }
 
-    private static void toStringBuilder(StringBuilder builder, TokenNode node, int l, List<Integer> branchesIndex) {
-        appenNTimes(builder, l, '__')
+    private static void treeStringBuilder(StringBuilder builder, TokenNode node, int l, Collection<Integer> branchesIndex) {
+        for (int i = 0; i < 2*l; i++) {
+            builder.append('_')
+        }
         builder.append(node.toString())
                 .append('\n')
         int children = node.nbChildren()
@@ -57,15 +59,11 @@ class TokenNode extends AbstractToken {
                     }
                 }
                 builder.append('|')
-                toStringBuilder(builder, node.getChild(i), l + 1, branchesIndex)
+                if (i == children - 1) {
+                    branchesIndex.remove(nbSpaces)
+                }
+                treeStringBuilder(builder, node.getChild(i), l + 1, branchesIndex)
             }
-        }
-
-    }
-
-    static void appenNTimes(StringBuilder builder, int l, String s) {
-        for (int i = 0; i < l; i++) {
-            builder.append(s)
         }
     }
 

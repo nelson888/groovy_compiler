@@ -43,13 +43,13 @@ class Parser { //Analyseur syntaxique
                 moveForward()
                 TokenNode node = expression()
                 if (getCurrent().type != TokenType.PARENT_CLOSE) {
-                    throw new ParentheseException("Parenthese should be close") //TODO display l and c
+                    throw new ParentheseException("Parenthese should be close at l:$node.l c:$node.c")
                 }
                 moveForward()
                 return node
         }
 
-        throw new RuntimeException("Token type $t is not handled or ERROR")
+        throw new IllegalStateException("Unexpected token $t.type occured at at l:$t.l c:$t.c")
     }
 
     private TokenNode expression() {

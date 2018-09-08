@@ -161,7 +161,7 @@ class LexicalAnalyzer {
                 }
 
                 if (t == null) {
-                    throw new UnknownSymbolException("Couldn't resolve symbol: $value")
+                    throw new UnknownSymbolException("Couldn't resolve symbol: $value at l:$lig c:$col")
                 }
                 return Token.of(t, col, lig)
         }
@@ -203,7 +203,7 @@ class LexicalAnalyzer {
                 } else if (!entry.isLetter()) {
                     return SYMBOL_STATE
                 } else {
-                    throw new IllegalTransitionStateException("Cannot have a character  next to a number encountered")
+                    throw new IllegalTransitionStateException("Cannot have a character next to a number encountered")
 
                 }
                 break
