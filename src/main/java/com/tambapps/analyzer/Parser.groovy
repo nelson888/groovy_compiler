@@ -12,18 +12,16 @@ import com.tambapps.exception.ParentheseException
 
 class Parser { //Analyseur syntaxique
 
-    private final List<Token> tokens
+    private List<Token> tokens
     private int currentIndex
 
-    Parser(Token[] tokens) {
-        this(Arrays.asList(tokens))
+    TokenNode parse(Token[] tokens) {
+        return parse(Arrays.asList(tokens))
     }
 
-    Parser(List<Token> tokens) {
+    TokenNode parse(List<Token> tokens) {
         this.tokens = tokens
-    }
-
-    TokenNode parse() {
+        currentIndex = 0
         return expression()
     }
 

@@ -17,32 +17,34 @@ List<Token> tokens
 try {
     tokens = lexicalAnalyzer.toTokens(new File(args[0]))
 } catch(RuntimeException e) {
-    println("Error")
+    println("Error performing lexical analyze")
     println("$e.message")
     return
 }
 
-println "Tokens:"
-println tokens
-
-Parser parser = new Parser(tokens)
+Parser parser = new Parser()
 
 TokenNode tree
 try {
-    tree = parser.parse()
+    tree = parser.parse(tokens)
 } catch(RuntimeException e) {
-    println("Error")
+    println("Error while parsing file:")
     println("$e.message")
     return
 }
 
-println "TokenNode tree"
-println tree.treeString()
-
 CodeGenerator codeGenerator = new CodeGenerator()
-String code  = codeGenerator.compile(tree)
-println "code generated:"
-println code
-File file = new File(args[0] + '.bin')
+String code
+try {
+    code = codeGenerator.compile(tree)
+} catch (RuntimeException e) {
+    println("Error generating processor code:")
+    println("$e.message")
+    return
+}
+
+File file = new File(args[0] + '.code')
 file.bytes = []
 file << code
+
+println("Compiled successfully")
