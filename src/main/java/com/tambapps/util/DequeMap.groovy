@@ -6,11 +6,11 @@ class DequeMap {
 
     private final Deque<Map<String,Object>> symbolsMap = new LinkedBlockingDeque<>();
 
-    void newBloc(){
+    void newBlock(){
         symbolsMap.push(new HashMap<>())
     }
 
-    void endBloc(){
+    void endBlock(){
         symbolsMap.pop()
     }
 
