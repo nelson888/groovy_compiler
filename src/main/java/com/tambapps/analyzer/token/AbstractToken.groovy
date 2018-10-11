@@ -20,7 +20,7 @@ abstract class AbstractToken {
     }
 
     @Override
-    final String toString() {
+    String toString() {
         def type = getType()
         StringJoiner joiner = new StringJoiner(', ', '{', '}')
                 .add("type=$type")
@@ -34,4 +34,24 @@ abstract class AbstractToken {
 
     abstract def getType()
 
+  boolean equals(o) {
+    if (this.is(o)) return true
+    if (!(o instanceof AbstractToken)) return false
+
+    AbstractToken that = (AbstractToken) o
+
+    if (c != that.c) return false
+    if (l != that.l) return false
+    if (value != that.value) return false
+
+    return true
+  }
+
+  int hashCode() {
+    int result
+    result = l
+    result = 31 * result + c
+    result = 31 * result + (value != null ? value.hashCode() : 0)
+    return result
+  }
 }

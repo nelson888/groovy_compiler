@@ -67,4 +67,23 @@ class TokenNode extends AbstractToken {
         }
     }
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof TokenNode)) return false
+        if (!super.equals(o)) return false
+
+        TokenNode tokenNode = (TokenNode) o
+
+        if (children != tokenNode.children) return false
+        if (type != tokenNode.type) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result = super.hashCode()
+        result = 31 * result + (type != null ? type.hashCode() : 0)
+        result = 31 * result + (children != null ? children.hashCode() : 0)
+        return result
+    }
 }

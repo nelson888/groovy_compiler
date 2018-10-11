@@ -4,7 +4,7 @@ class Token extends AbstractToken {
 
     final TokenType type
 
-    private Token(int l, int c, value, TokenType type) {
+    Token(int l, int c, value, TokenType type) {
         super(l, c, value)
         this.type = type
     }
@@ -22,4 +22,21 @@ class Token extends AbstractToken {
         return new Token(l, c, value, type)
     }
 
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof Token)) return false
+        if (!super.equals(o)) return false
+
+        Token token = (Token) o
+
+        if (type != token.type) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result = super.hashCode()
+        result = 31 * result + (type != null ? type.hashCode() : 0)
+        return result
+    }
 }
