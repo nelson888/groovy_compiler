@@ -35,7 +35,7 @@ class CodeGenerator {
     }
 
 
-    private void genCode(TokenNode node) {
+    void genCode(TokenNode node) {
         TokenNodeType t = node.type
         if (t == TokenNodeType.CONSTANT) {
             println("push.i $node.value")
