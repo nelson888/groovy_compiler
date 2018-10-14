@@ -1,10 +1,10 @@
-package com.tambapps.analyzer
+package com.tambapps.compiler.analyzer
 
-import com.tambapps.analyzer.token.Token
-import com.tambapps.analyzer.token.TokenType
-import com.tambapps.exception.LexicalException
+import com.tambapps.compiler.analyzer.token.Token
+import com.tambapps.compiler.analyzer.token.TokenType
+import com.tambapps.compiler.exception.LexicalException
 
-import static com.tambapps.analyzer.token.Token.of;
+import static com.tambapps.compiler.analyzer.token.Token.of
 
 class LexicalAnalyzerTest extends GroovyTestCase {
 

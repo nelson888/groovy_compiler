@@ -1,4 +1,4 @@
-package com.tambapps.analyzer
+package com.tambapps.compiler.analyzer
 
 import groovy.transform.PackageScope
 

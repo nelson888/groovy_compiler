@@ -1,10 +1,10 @@
-package com.tambapps.analyzer
+package com.tambapps.compiler.analyzer
 
-import com.tambapps.analyzer.token.Token
-import com.tambapps.analyzer.token.TokenNode
-import com.tambapps.analyzer.token.TokenNodeType
-import com.tambapps.analyzer.token.TokenType
-import com.tambapps.exception.ParsingException
+import com.tambapps.compiler.analyzer.token.Token
+import com.tambapps.compiler.analyzer.token.TokenNode
+import com.tambapps.compiler.analyzer.token.TokenNodeType
+import com.tambapps.compiler.analyzer.token.TokenType
+import com.tambapps.compiler.exception.ParsingException
 
 import java.util.stream.Collectors
 import java.util.stream.Stream

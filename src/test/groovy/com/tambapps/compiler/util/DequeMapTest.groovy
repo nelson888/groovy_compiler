@@ -1,4 +1,4 @@
-package com.tambapps.util
+package com.tambapps.compiler.util
 
 class DequeMapTest extends GroovyTestCase {
 
