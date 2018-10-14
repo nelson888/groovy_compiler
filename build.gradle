@@ -1,0 +1,46 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = "com.tambapps.compiler.CompileScript"
+version = '1.0'
+archivesBaseName = "compiler"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // To use the Groovy library that ships with Gradle
+    // compile localGroovy()
+
+    // To use a regular Groovy dependency
+    compile 'org.codehaus.groovy:groovy-all:2.5.2'
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+// Use this task to generate the stand-alone excutable jar of groovy
+task uberjar( type: Jar, dependsOn: [':compileJava',':compileGroovy'] ) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+
+    from files(sourceSets.main.output)
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+        configurations.runtime.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
+
+    sourceSets.main.groovy {
+        srcDirs = [ 'src' ] //Was missing/wrong
+    }
+}
