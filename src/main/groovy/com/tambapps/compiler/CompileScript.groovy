@@ -9,7 +9,7 @@ import com.tambapps.compiler.exception.LexicalException
 import com.tambapps.compiler.exception.ParsingException
 
 if (args.length <= 0) {
-    println 'You must provide at least file to compile'
+    println 'You must provide at least one file to compile'
     return
 }
 
@@ -17,37 +17,36 @@ lexicalAnalyzer = new LexicalAnalyzer()
 parser = new Parser()
 codeGenerator = new CodeGenerator()
 
-for (String fileName : args) {
-    compile(fileName)
-    lexicalAnalyzer.reset()
-    codeGenerator.reset()
-
-}
-
-void compile(String fileName) {
-    List<Token> tokens
+for (String filePath : args) {
+    File file = new File(filePath)
+    if (!file.exists()) {
+        println("The file with path $filePath doesn't exits")
+        continue
+    }
+    println("Compiling $file.name...")
     try {
-        tokens = lexicalAnalyzer.toTokens(new File(fileName))
-    } catch(LexicalException e) {
+        compile(file)
+        println("Compiled successfully")
+    } catch (LexicalException e) {
         println('Error while performing lexical analysis')
         println("$e.message")
         return
-    }
-
-    TokenNode tree
-    try {
-        tree = parser.parse(tokens)
-    } catch(ParsingException e) {
+    } catch (ParsingException e) {
         println('Error while performing parsing')
         println("$e.message")
-        return
     }
 
+    println()
+    lexicalAnalyzer.reset()
+    codeGenerator.reset()
+}
+
+void compile(File file) throws LexicalException, ParsingException {
+    List<Token> tokens = lexicalAnalyzer.toTokens(file)
+    TokenNode tree = parser.parse(tokens)
     String code = codeGenerator.compile(tree)
 
-    File file = new File(fileName + '.code')
-    file.bytes = code.getBytes()
-
-    println("Compiled successfully")
+    File compiled = new File(file.parentFile, file.name + '.code')
+    compiled.bytes = code.getBytes()
 }
 

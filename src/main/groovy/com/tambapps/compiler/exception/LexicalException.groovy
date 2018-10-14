@@ -1,13 +1,9 @@
 package com.tambapps.compiler.exception;
 
-class LexicalException extends RuntimeException {
+class LexicalException extends CompileException {
 
-  LexicalException(String message, Throwable cause) {
-    super(message, cause)
-  }
-
-  LexicalException(String message) {
-    super(message)
+  LexicalException(String message, int l, int c) {
+    super(message, l, c)
   }
 
 }

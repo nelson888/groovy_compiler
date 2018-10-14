@@ -21,11 +21,12 @@ class Parser { //Syntax analyzer
      * @return the Token tree
      */
     TokenNode parse(tokens) {
+        this.tokens = tokens
         TokenNode node =  expression()
         if (currentIndex < tokens.size() - 1) {
             Token t = getCurrent()
             if (t.type != TokenType.END_OF_FILE) {
-                throw new ParsingException("Syntax error at the end of the file l:$t.l c:$t.c")
+                throw new ParsingException("Syntax error at the end of the file", t.l, t.c)
             }
         }
         return node
@@ -47,13 +48,13 @@ class Parser { //Syntax analyzer
                 moveForward()
                 TokenNode node = expression()
                 if (getCurrent().type != TokenType.PARENT_CLOSE) {
-                    throw new ParsingException("Parenthese should be close at l:$node.l c:$node.c")
+                    throw new ParsingException("Parenthesis should be close", node.l, node.c)
                 }
                 moveForward()
                 return node
         }
 
-        throw new ParsingException("Unexpected token $t.type encountered at l:$t.l c:$t.c")
+        throw new ParsingException("Unexpected token $t.type encountered", t.l, t.c)
     }
 
     private TokenNode expression() {
@@ -81,7 +82,7 @@ class Parser { //Syntax analyzer
     private Token getCurrent() {
         if (currentIndex >= tokens.size()) {
             Token last = tokens[-1]
-            throw new ParsingException("Unexpected end of file at l:$last.l c:$last.c")
+            throw new ParsingException("Unexpected end of file", last.l, last.c)
         }
         return tokens[currentIndex]
     }

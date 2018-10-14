@@ -1,9 +1,9 @@
 package com.tambapps.compiler.exception
 
-class ParsingException extends RuntimeException {
+class ParsingException extends CompileException {
 
-  ParsingException(String var1) {
-    super(var1)
+  ParsingException(String message, int l, int c) {
+    super(message, l, c)
   }
 
 }

@@ -4,7 +4,6 @@ import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenType
 import com.tambapps.compiler.analyzer.token.TokenUtils
 import com.tambapps.compiler.exception.LexicalException
-import com.tambapps.compiler.exception.UnknownSymbolException
 import com.tambapps.compiler.util.LogicalController
 import com.tambapps.compiler.util.ReturnTable
 import com.tambapps.compiler.util.TransitionTable
@@ -52,11 +51,11 @@ class LexicalAnalyzer {
         }
     }
 
-    List<Token> toTokens(File file) {
+    List<Token> toTokens(File file) throws LexicalException {
         return toTokens(file.getText())
     }
 
-    List<Token> toTokens(String content) {
+    List<Token> toTokens(String content) throws LexicalException {
         List<Token> tokens = new ArrayList<>()
         content = content + LINE_BREAK //add line return to simulate end of file
 
@@ -65,12 +64,7 @@ class LexicalAnalyzer {
             if (!c.isWhitespace() && !(c == LINE_BREAK)) {
                 valueBuilder.append(c)
             }
-            Token token
-            try {
-                token = logicalController.act(c)
-            } catch (RuntimeException e) {
-                throw new LexicalException("Lexical error at l:$lig c:$col\n$e.message", e)
-            }
+            Token token = logicalController.act(c)
 
             if (token) {
                 tokens.add(token)
@@ -88,7 +82,7 @@ class LexicalAnalyzer {
             }
         }
         if (logicalController.getState() != INITIAL_STATE) {
-            throw new LexicalException("Unexpected end of file")
+            throw new LexicalException("Unexpected end of file", lig, col)
         }
         tokens.add(Token.of(TokenType.END_OF_FILE, col, lig))
         return tokens
@@ -108,7 +102,7 @@ class LexicalAnalyzer {
                 if (nextState == INITIAL_STATE && !isInvisibleChar(nextChar)) {
                     TokenType t = TokenUtils.SYMBOLS_MAP.get(value)
                     if (t == null) {
-                        throw new UnknownSymbolException("Couldn't resolve symbol: $value")
+                        throw new LexicalException("Couldn't resolve symbol: $value", lig, col)
                     }
                     return Token.of(t, col > 0 ? col - 1: 0, lig)
                 } else {
@@ -165,7 +159,7 @@ class LexicalAnalyzer {
                 }
 
                 if (t == null) {
-                    throw new UnknownSymbolException("Couldn't resolve symbol: $value at l:$lig c:$col")
+                    throw new LexicalException("Couldn't resolve symbol: $value", lig, col)
                 }
                 return Token.of(t, col, lig)
         }
@@ -207,7 +201,7 @@ class LexicalAnalyzer {
                 } else if (!entry.isLetter()) {
                     return SYMBOL_STATE
                 } else {
-                    throw new LexicalException("Cannot have a character next to a number encountered")
+                    throw new LexicalException("Cannot have a character next to a number", lig, col)
 
                 }
                 break
@@ -225,7 +219,7 @@ class LexicalAnalyzer {
                 }
         }
 
-        throw new LexicalException("Illegal character '$entry' encountered")
+        throw new LexicalException("Illegal character '$entry' encountered", lig, col)
     }
 
     void reset() {

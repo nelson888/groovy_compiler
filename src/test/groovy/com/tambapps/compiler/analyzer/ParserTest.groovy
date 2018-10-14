@@ -66,6 +66,7 @@ class ParserTest extends GroovyTestCase {
                 "Got:\n" + result.treeString()
                 , expected == result)
             lexicalAnalyzer.reset()
+            parser.reset()
         }
     }
 
@@ -78,6 +79,7 @@ class ParserTest extends GroovyTestCase {
             } catch (ParsingException ignored) {
 
             }
+            parser.reset()
         }
     }
 

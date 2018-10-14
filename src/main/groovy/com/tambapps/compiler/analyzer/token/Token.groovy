@@ -9,7 +9,7 @@ class Token extends AbstractToken {
         this.type = type
     }
 
-    private Token(int l, int c, TokenType type) {
+    Token(int l, int c, TokenType type) {
         super(l, c, null)
         this.type = type
     }
