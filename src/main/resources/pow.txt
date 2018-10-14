@@ -1,0 +1,12 @@
+private int pow(int nb, int exp) {
+        if (exp == 0) {
+            return 1
+        } else if (exp == 1) {
+            return nb
+        }
+        if (exp % 2 == 0) {
+            int p = pow(nb, exp >> 1)
+            return p * p
+        }
+        return nb * pow(nb, exp - 1)
+    }
