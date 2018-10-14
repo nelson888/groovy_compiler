@@ -1,4 +1,8 @@
 #IDE generated files
 .idea/
+.gradle/
 out/
+target/
+build/
+gradle/
 groovy_compiler.iml
