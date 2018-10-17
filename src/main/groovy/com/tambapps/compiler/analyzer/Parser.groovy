@@ -1,5 +1,6 @@
 package com.tambapps.compiler.analyzer
 
+import com.tambapps.compiler.analyzer.token.TokenNodeType
 import com.tambapps.compiler.analyzer.token.TokenType
 import com.tambapps.compiler.analyzer.token.TokenUtils
 import com.tambapps.compiler.exception.ParsingException
@@ -22,20 +23,19 @@ class Parser { //Syntax analyzer
      */
     TokenNode parse(tokens) {
         this.tokens = tokens
-        TokenNode node =  expression()
-        if (currentIndex < tokens.size() - 1) {
-            Token t = getCurrent()
-            if (t.type != TokenType.END_OF_FILE) {
-                throw new ParsingException("Syntax error at the end of the file", t.l, t.c)
-            }
+        TokenNode P = new TokenNode(TokenNodeType.PROG, new Token(0, 0, null, null), [])
+        while (currentIndex < tokens.size()) {
+            TokenNode n = statement()
+            P.addChild(n)
         }
-        return node
+        return P
     }
 
     private TokenNode atome() {
         Token t = getCurrent()
         switch (t.type) {
             case TokenType.CONSTANT:
+            case TokenType.IDENTIFIER:
                 moveForward()
                 return new TokenNode(t)
             case TokenType.PLUS:
@@ -53,7 +53,6 @@ class Parser { //Syntax analyzer
                 moveForward()
                 return node
         }
-
         throw new ParsingException("Unexpected token $t.type encountered", t.l, t.c)
     }
 
@@ -75,6 +74,20 @@ class Parser { //Syntax analyzer
         return A
     }
 
+    private TokenNode statement() {
+        Token t = getCurrent()
+        switch (t.type) {
+            case TokenType.VAR:
+                accept(TokenType.VAR)
+                Token tokIdent = accept(TokenType.IDENTIFIER)
+                accept(TokenType.SEMICOLON)
+                return new TokenNode(tokIdent, TokenNodeType.VAR)
+            default: // expression;
+                TokenNode e = expression()
+                return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])
+        }
+    }
+
     private void moveForward() {
         currentIndex++
     }
@@ -90,6 +103,15 @@ class Parser { //Syntax analyzer
     void reset() {
         tokens = null
         currentIndex = 0
+    }
+
+    Token accept(TokenType t) {
+        Token token = getCurrent()
+        if (token.type != t) {
+            throw new ParsingException("Expected token of type $t", token.l, token.c)
+        }
+        moveForward()
+        return token
     }
 
 }
