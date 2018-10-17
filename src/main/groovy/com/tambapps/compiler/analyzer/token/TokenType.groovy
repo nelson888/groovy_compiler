@@ -11,6 +11,7 @@ enum TokenType {
     EQUAL('=='), NOT_EQUAL('!='), STRICT_SUP('>'), STRICT_INF('<'), SUP('>='), INF('<='), AND('and'), OR('or'), //binary operator
     PARENT_OPEN('('), PARENT_CLOSE(')'), COMMA(','), SEMICOLON(';'), ACCOLADE_OPEN('{'), ACCOLADE_CLOSE('}'),
     IF('if'), FOR('for'), WHILE('while'),
+    VAR('var'),
     END_OF_FILE;
 
     final String value
@@ -23,7 +24,7 @@ enum TokenType {
         this.value = value
     }
     boolean isBinaryOperator() {
-        return Stream.of(PLUS, MINUS, DIVIDE, MULTIPLY, POWER, MODULO, EQUAL, NOT_EQUAL, STRICT_SUP, STRICT_INF, SUP, INF, AND, OR)
+        return Stream.of(PLUS, MINUS, DIVIDE, MULTIPLY, POWER, MODULO, EQUAL, NOT_EQUAL, STRICT_SUP, STRICT_INF, SUP, INF, AND, OR, ASSIGNMENT)
                 .anyMatch({t -> this == t})
     }
 
