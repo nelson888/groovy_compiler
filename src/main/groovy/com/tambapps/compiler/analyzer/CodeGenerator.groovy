@@ -49,7 +49,11 @@ class CodeGenerator {
 
     private void genCode(TokenNode node) {
         TokenNodeType t = node.type
-        if (t == TokenNodeType.CONSTANT) {
+        if (t == TokenNodeType.PROG){
+            for(int i = 0; i<node.nbChildren();i++){
+                genCode(node.getChild(i))
+            }
+        } else if (t == TokenNodeType.CONSTANT) {
             println("push.i $node.value")
         } else if (t.isUnaryOperator()) {
             println("push.i 0")
