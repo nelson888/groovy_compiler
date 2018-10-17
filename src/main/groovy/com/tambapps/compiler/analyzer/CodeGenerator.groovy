@@ -38,6 +38,7 @@ class CodeGenerator {
 
     String compile(TokenNode node) {
         println(".start")
+        println("push.i 0")
         genCode(node)
         println("out.i")
         println("push.i 10")
@@ -58,6 +59,16 @@ class CodeGenerator {
             genCode(node.getChild(0))
             genCode(node.getChild(1))
             println(COMMAND_MAP.get(t))
+        } else if (t == TokenNodeType.DROP) {
+            genCode(node.getChild(0))
+            println("drop")
+        } else if (t == TokenNodeType.VAR_REF){
+            println("get $node.value.idx")
+        } else if (t == TokenNodeType.ASSIGNMENT){
+            genCode(node.getChild(1))
+            println("drop")
+            TokenNode nodeChild = node.getChild(0)
+            println("set $nodeChild.value.idx)")
         }
     }
 

@@ -46,16 +46,17 @@ class TokenUtils {
         priorityMap.put(TokenType.MULTIPLY, 2)
         priorityMap.put(TokenType.DIVIDE, 2)
         priorityMap.put(TokenType.MODULO, 2)
-        priorityMap.put(TokenType.AND, 2)
         priorityMap.put(TokenType.PLUS, 3)
         priorityMap.put(TokenType.MINUS, 3)
-        priorityMap.put(TokenType.EQUAL, 4)
-        priorityMap.put(TokenType.NOT_EQUAL, 4)
-        priorityMap.put(TokenType.STRICT_SUP, 4)
-        priorityMap.put(TokenType.STRICT_INF, 4)
-        priorityMap.put(TokenType.SUP, 4)
-        priorityMap.put(TokenType.INF, 4)
-        priorityMap.put(TokenType.OR, 4)
+        priorityMap.put(TokenType.AND, 4)
+        priorityMap.put(TokenType.EQUAL, 5)
+        priorityMap.put(TokenType.NOT_EQUAL, 5)
+        priorityMap.put(TokenType.STRICT_SUP, 5)
+        priorityMap.put(TokenType.STRICT_INF, 5)
+        priorityMap.put(TokenType.SUP, 5)
+        priorityMap.put(TokenType.INF, 5)
+        priorityMap.put(TokenType.OR, 5)
+        priorityMap.put(TokenType.ASSIGNMENT,6)
 
         //filled in the loop
         Map<TokenType, Integer> associativityMap = new HashMap<>()
@@ -69,7 +70,7 @@ class TokenUtils {
                 keywordsMap.put(t.value, t)
             }
             if (t.isBinaryOperator()) {
-                associativityMap.put(t, t == TokenType.POWER ? RIGHT :  LEFT)
+                associativityMap.put(t, t == TokenType.POWER || t == TokenType.ASSIGNMENT ? RIGHT :  LEFT)
             }
         }
 
