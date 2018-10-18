@@ -35,10 +35,11 @@ class TokenUtils {
         binaryMap.put(TokenType.INF, TokenNodeType.INF)
         binaryMap.put(TokenType.AND, TokenNodeType.AND)
         binaryMap.put(TokenType.OR, TokenNodeType.OR)
+        binaryMap.put(TokenType.ASSIGNMENT, TokenNodeType.ASSIGNMENT)
 
         Map<TokenType, TokenNodeType> typeMap = new HashMap<>()
         typeMap.put(TokenType.CONSTANT, TokenNodeType.CONSTANT)
-        typeMap.put(TokenType.IDENTIFIER, TokenNodeType.IDENTIFIER)
+        typeMap.put(TokenType.IDENTIFIER, TokenNodeType.VAR_REF)
 
         Map<TokenType, Integer> priorityMap = new HashMap<>()
         priorityMap.put(TokenType.POWER, 1)
