@@ -81,6 +81,57 @@ class Parser { //Syntax analyzer
                 Token tokIdent = accept(TokenType.IDENTIFIER)
                 accept(TokenType.SEMICOLON)
                 return new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value,  0)) //TODO pour le moment on traite qu'une variable
+            case TokenType.IF: // if (test) S
+                TokenNode N = new TokenNode(accept(TokenType.IF))
+                accept(TokenType.PARENT_OPEN)
+                TokenNode test = expression()
+                accept(TokenType.PARENT_CLOSE)
+                TokenNode S = statement()
+                N.addChild(test)
+                N.addChild(S)
+                if (getCurrent().type == TokenType.ELSE) {
+                    accept(TokenType.ELSE)
+                    N.addChild(statement())
+                }
+                return N
+            case TokenType.ACCOLADE_OPEN:
+                TokenNode N = new TokenNode(accept(TokenType.ACCOLADE_OPEN))
+                while (getCurrent().type != TokenType.ACCOLADE_CLOSE) {
+                    N.addChild(statement())
+                }
+                accept(TokenType.ACCOLADE_CLOSE)
+                return N
+            case TokenType.WHILE: //while (E) S
+                TokenNode N = new TokenNode(accept(TokenType.WHILE)) //noeud loop
+                TokenNode cond = new TokenNode(TokenNodeType.COND, N.l, N.c)
+                N.addChild(cond)
+                accept(TokenType.PARENT_OPEN)
+                TokenNode test = expression()
+                accept(TokenType.PARENT_CLOSE)
+                TokenNode S = statement()
+                cond.addChildren(test, S)
+                return N
+            case TokenType.FOR: //for (init;test;step) S
+                TokenNode N = new TokenNode(accept(TokenType.FOR)) //noeud seq
+                TokenNode loop = new TokenNode(TokenNodeType.LOOP, N.l, N.c)
+                accept(TokenType.PARENT_OPEN)
+                TokenNode init = expression()
+                accept(TokenType.SEMICOLON)
+                TokenNode test = expression()
+                accept(TokenType.SEMICOLON)
+                TokenNode step = expression()
+                accept(TokenType.PARENT_CLOSE)
+                TokenNode body = statement()
+
+                TokenNode cond = new TokenNode(TokenNodeType.COND, loop.l, loop.c)
+                TokenNode seq = new TokenNode(TokenNodeType.SEQ, step.l, step.c)
+                TokenNode breakNode = new TokenNode(TokenNodeType.BREAK, step.l, step.c)
+
+                N.addChildren(init, loop)
+                loop.addChild(cond)
+                cond.addChildren(test, seq, breakNode)
+                seq.addChildren(body, step)
+                return N
             default: // expression;
                 TokenNode e = expression()
                 return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])

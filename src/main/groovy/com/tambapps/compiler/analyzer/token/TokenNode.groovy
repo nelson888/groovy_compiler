@@ -26,8 +26,19 @@ class TokenNode extends AbstractToken {
         this.children.addAll(children)
     }
 
+    TokenNode(TokenNodeType type, int l, int c) {
+        super(l, c, null)
+        this.type = type
+    }
+
     void addChild(TokenNode node) {
         this.children.add(node)
+    }
+
+    void addChildren(TokenNode... nodes) {
+        for (TokenNode node : nodes) {
+            this.children.add(node)
+        }
     }
 
     TokenNode getChild(int i) {

@@ -49,8 +49,6 @@ void compile(File file) throws LexicalException, ParsingException {
     TokenNode tree = parser.parse(tokens)
     println("Token tree:\n${tree.treeString()}")
     String code = codeGenerator.compile(tree)
-    println("Generated code: $code")
-    File compiled = new File(file.parentFile, file.name + '.code')
-    compiled.bytes = code.getBytes()
+    println("Generated code:************\n\n$code\n************")
 }
 
