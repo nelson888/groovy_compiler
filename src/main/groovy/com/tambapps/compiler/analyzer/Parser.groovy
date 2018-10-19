@@ -38,7 +38,7 @@ class Parser { //Syntax analyzer
             case TokenType.CONSTANT:
                 return new TokenNode(t)
             case TokenType.IDENTIFIER:
-                return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value, 0)) //TODO pour le moment on traite qu'une variable
+                return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value))
             case TokenType.PLUS:
             case TokenType.MINUS:
             case TokenType.NOT:
@@ -79,8 +79,22 @@ class Parser { //Syntax analyzer
             case TokenType.VAR:
                 accept(TokenType.VAR)
                 Token tokIdent = accept(TokenType.IDENTIFIER)
-                accept(TokenType.SEMICOLON)
-                return new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value,  0)) //TODO pour le moment on traite qu'une variable
+                if (getCurrent().type == TokenType.SEMICOLON) {
+                    accept(TokenType.SEMICOLON)
+                    return new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value))
+                } else if (getCurrent().type == TokenType.ASSIGNMENT) { //var ident = expr;
+                    Token assignToken = accept(TokenType.ASSIGNMENT)
+                    TokenNode seq  = new TokenNode(assignToken, TokenNodeType.SEQ)
+                    TokenNode declTok = new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value))
+                    TokenNode value = expression()
+                    TokenNode assignTok = new TokenNode(assignToken, TokenNodeType.ASSIGNMENT, null)
+                    assignTok.addChildren(new TokenNode(tokIdent, TokenNodeType.VAR_REF, new VarInfo(tokIdent.value)), value)
+                    seq.addChildren(declTok, assignTok)
+                    accept(TokenType.SEMICOLON)
+                    return seq
+                }
+            throw new ParsingException("Expected token $TokenType.SEMICOLON or $TokenType.ASSIGNMENT", tokIdent.l, tokIdent.c)
+
             case TokenType.IF: // if (test) S
                 TokenNode N = new TokenNode(accept(TokenType.IF))
                 accept(TokenType.PARENT_OPEN)
@@ -132,6 +146,11 @@ class Parser { //Syntax analyzer
                 cond.addChildren(test, seq, breakNode)
                 seq.addChildren(body, step)
                 return N
+            case TokenType.PRINT:
+                TokenNode print = new TokenNode(accept(TokenType.PRINT))
+                TokenNode e = expression()
+                print.addChild(e)
+                return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [print])
             default: // expression;
                 TokenNode e = expression()
                 return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])
@@ -165,12 +184,12 @@ class Parser { //Syntax analyzer
     }
 
     static class VarInfo {
-        def name
-        int index
+        String name
+        Integer index
 
-        VarInfo(def value, int index) {
+        VarInfo(def value) {
             this.name = value
-            this.index = index
+            index = null
         }
 
         @Override

@@ -5,32 +5,36 @@ import com.tambapps.compiler.analyzer.token.TokenNodeType
 import com.tambapps.compiler.util.DequeMap
 import com.tambapps.compiler.util.Symbol
 
-class SementicAnalyzer {
+class SemanticAnalyzer {
 
-    DequeMap dequeMap = new DequeMap()
-
-    int nbSlot = 0
+    private DequeMap dequeMap = new DequeMap()
+    private int nbSlot = 0
 
     void process(TokenNode node){
         switch (node.type){
             case TokenNodeType.VAR_DECL:
-                Symbol s = dequeMap.newSymbol(node.value)
+                Symbol s = dequeMap.newSymbol(node.value.name)
                 s.slot = nbSlot++
+                break
             case TokenNodeType.VAR_REF:
-                Symbol s = dequeMap.findSymbol(node.value)
+                Symbol s = dequeMap.findSymbol(node.value.name)
                 node.value.index = s.slot
+                break
             case TokenNodeType.BLOC:
                 dequeMap.newBlock()
                 for(int i = 0; i<node.nbChildren(); i++){
                    process(node.getChild(i))
                 }
                 dequeMap.endBlock()
-            /*default:
+                break
+            default:
                 for(int i = 0; i<node.nbChildren(); i++){
                     process(node.getChild(i))
                 }
-            */
         }
+    }
 
+    int getNbSlot() {
+        return nbSlot
     }
 }

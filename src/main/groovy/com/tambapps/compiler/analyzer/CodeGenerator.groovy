@@ -44,17 +44,14 @@ class CodeGenerator {
             println("push.i 0")
         }
         genCode(node)
-        println("out.i")
-        println("push.i 10")
-        println("out.c")
+
         println("halt")
         return builder.toString()
     }
 
     private void genCode(TokenNode node) {
         TokenNodeType t = node.type
-        if (t == TokenNodeType.PROG){
-
+        if (t == TokenNodeType.PROG || t == TokenNodeType.SEQ) {
             for(int i = 0; i<node.nbChildren();i++){
                 genCode(node.getChild(i))
             }
@@ -91,20 +88,23 @@ class CodeGenerator {
             TokenNode nodeChild = node.getChild(0)
             println("set $nodeChild.value.index")
 
-        }else if(t == TokenNodeType.BLOC) {
+        } else if(t == TokenNodeType.BLOC) {
 
             for (int i = 0; i < node.nbChildren(); i++) {
                 genCode(node.getChild(i))
             }
 
-        }else if(t == TokenNodeType.COND){
-
+        } else if(t == TokenNodeType.COND){
             int l = nlabel++
             genCode(node.getChild(0))
             println("jumpf l$l")
             genCode(node.getChild(1))
             println(".l$l")
-            
+        } else if (t == TokenNodeType.PRINT) {
+            genCode(node.getChild(0))
+            println("out.i")
+            println("push.i 10")
+            println("out.c")
         }
     }
 

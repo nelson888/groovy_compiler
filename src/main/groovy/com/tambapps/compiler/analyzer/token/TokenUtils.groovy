@@ -44,6 +44,7 @@ class TokenUtils {
         typeMap.put(TokenType.ACCOLADE_OPEN, TokenNodeType.BLOC)
         typeMap.put(TokenType.WHILE, TokenNodeType.LOOP)
         typeMap.put(TokenType.FOR, TokenNodeType.SEQ)
+        typeMap.put(TokenType.PRINT, TokenNodeType.PRINT)
 
         Map<TokenType, Integer> priorityMap = new HashMap<>()
         priorityMap.put(TokenType.POWER, 1)
