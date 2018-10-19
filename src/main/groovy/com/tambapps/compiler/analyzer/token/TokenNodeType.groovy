@@ -8,7 +8,7 @@ enum TokenNodeType {
     EQUAL, NOT_EQUAL, STRICT_INF, STRICT_SUP, SUP, INF, AND, OR,
     CONSTANT, IDENTIFIER,
     DROP,ASSIGNMENT,VAR_REF,DECL_VAR, VAR,
-    PROG;
+    PROG,BLOC,SEQ;
 
     boolean isUnaryOperator() {
         return Stream.of(PLUS_U, MINUS_U, NOT)
