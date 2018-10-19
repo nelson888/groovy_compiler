@@ -17,7 +17,7 @@ class SemanticAnalyzer {
             case TokenNodeType.VAR_DECL:
                 Symbol s
                 try {
-                    s = dequeMap.newSymbol(node.value.name)
+                    s = dequeMap.newSymbol(node.value)
                 } catch(SymbolException e) {
                     throw new SemanticException(e.message, node.l, node.c)
                 }

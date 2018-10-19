@@ -81,11 +81,11 @@ class Parser { //Syntax analyzer
                 Token tokIdent = accept(TokenType.IDENTIFIER)
                 if (getCurrent().type == TokenType.SEMICOLON) {
                     accept(TokenType.SEMICOLON)
-                    return new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value))
+                    return new TokenNode(tokIdent, TokenNodeType.VAR_DECL)
                 } else if (getCurrent().type == TokenType.ASSIGNMENT) { //var ident = expr;
                     Token assignToken = accept(TokenType.ASSIGNMENT)
                     TokenNode seq  = new TokenNode(assignToken, TokenNodeType.SEQ)
-                    TokenNode declTok = new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value))
+                    TokenNode declTok = new TokenNode(tokIdent, TokenNodeType.VAR_DECL)
                     TokenNode value = expression()
                     TokenNode assignTok = new TokenNode(assignToken, TokenNodeType.ASSIGNMENT, null)
                     assignTok.addChildren(new TokenNode(tokIdent, TokenNodeType.VAR_REF, new VarInfo(tokIdent.value)), value)
@@ -150,7 +150,8 @@ class Parser { //Syntax analyzer
                 TokenNode print = new TokenNode(accept(TokenType.PRINT))
                 TokenNode e = expression()
                 print.addChild(e)
-                return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [print])
+                accept(TokenType.SEMICOLON)
+                return print
             default: // expression;
                 TokenNode e = expression()
                 return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])

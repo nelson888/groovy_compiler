@@ -28,7 +28,7 @@ class LexicalAnalyzer {
 
     private static final Character SPACE = ' ' as Character
     private static final Character LINE_BREAK = '\n' as Character
-    private static final Character TAB = '\r' as Character
+    private static final Character TAB = '\t' as Character
     private static final Character EQUAL = '=' as Character
     private static final List<Character> SINGLE_CHAR_SYMBOLS =  Arrays.stream(TokenType.values())
             .filter({t -> t.isOnlySingleCharSymbol()}).map({t -> t.value as Character})

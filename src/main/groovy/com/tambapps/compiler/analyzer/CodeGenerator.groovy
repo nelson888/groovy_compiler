@@ -121,7 +121,7 @@ class CodeGenerator {
             println("push.i 10")
             println("out.c")
         } else if (t == TokenNodeType.BREAK) {
-            println("jumpf l${loopExitDeque.removeLast()}")
+            println("jump l${loopExitDeque.removeLast()}")
         } else if (t == TokenNodeType.LOOP) {
             int lStart = nlabel++
             int lExit = nlabel++
