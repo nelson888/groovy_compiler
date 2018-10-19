@@ -30,6 +30,8 @@ class CodeGenerator {
         COMMAND_MAP = Collections.unmodifiableMap(commandMap)
     }
 
+    int nlabel = 0
+
     private final StringBuilder builder
 
     CodeGenerator() {
@@ -50,29 +52,57 @@ class CodeGenerator {
     private void genCode(TokenNode node) {
         TokenNodeType t = node.type
         if (t == TokenNodeType.PROG){
+
             for(int i = 0; i<node.nbChildren();i++){
                 genCode(node.getChild(i))
             }
+
         } else if (t == TokenNodeType.CONSTANT) {
+
             println("push.i $node.value")
+
         } else if (t.isUnaryOperator()) {
+
             println("push.i 0")
             genCode(node.getChild(0))
             println(COMMAND_MAP.get(t))
+
         } else if (t.isBinaryOperator() && t != TokenNodeType.POWER) {
+
             genCode(node.getChild(0))
             genCode(node.getChild(1))
             println(COMMAND_MAP.get(t))
+
         } else if (t == TokenNodeType.DROP) {
+
             genCode(node.getChild(0))
             println("drop")
+
         } else if (t == TokenNodeType.VAR_REF){
+
             println("get $node.value.index")
+
         } else if (t == TokenNodeType.ASSIGNMENT){
+
             genCode(node.getChild(1))
             println("dup")
             TokenNode nodeChild = node.getChild(0)
             println("set $nodeChild.value.index")
+
+        }else if(t == TokenNodeType.BLOC) {
+
+            for (int i = 0; i < node.nbChildren(); i++) {
+                genCode(node.getChild(i))
+            }
+
+        }else if(t == TokenNodeType.COND){
+
+            int l = nlabel++
+            genCode(node.getChild(0))
+            println("jumpf l$l")
+            gencode(node.getChild(1))
+            println(".l$l")
+            
         }
     }
 

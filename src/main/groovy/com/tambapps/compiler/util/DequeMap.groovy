@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingDeque
 
 class DequeMap {
 
-    private final Deque<Map<String,Object>> symbolsMap = new LinkedBlockingDeque<>();
+    private final Deque<Map<String,Symbol>> symbolsMap = new LinkedBlockingDeque<>();
 
     void newBlock(){
         symbolsMap.push(new HashMap<>())
@@ -14,17 +14,17 @@ class DequeMap {
         symbolsMap.pop()
     }
 
-    Object newSymbol(String ident){
+    Symbol newSymbol(String ident){
         def map = symbolsMap.peek()
         if (map.containsKey(ident)){
             throw new RuntimeException("Already defined variable")
         }
-        def s = new Object()
+        Symbol s = new Object()
         map.put(ident, s)
         return s
     }
 
-    Object findSymbol(String ident){
+    Symbol findSymbol(String ident){
         for (def map:symbolsMap.descendingIterator()){
             if (map.containsKey(ident)) {
                 return map.get(ident)
