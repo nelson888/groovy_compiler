@@ -119,7 +119,7 @@ class CodeGenerator {
         println("out.c")
         break
       case TokenNodeType.BREAK:
-        println("jump l${loopExitDeque.removeLast()}")
+        println("jump l${loopExitDeque.pop()}")
         break
       case TokenNodeType.LOOP:
         int lStart = labels++
