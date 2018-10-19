@@ -8,6 +8,7 @@ import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.exception.LexicalException
 import com.tambapps.compiler.exception.ParsingException
+import com.tambapps.compiler.exception.SemanticException
 
 if (args.length <= 0) {
     println 'You must provide at least one file to compile'
@@ -36,6 +37,9 @@ for (String filePath : args) {
     } catch (ParsingException e) {
         println('Error while performing parsing')
         println("$e.message")
+    } catch (SemanticException e) {
+        println('Error while performing semantic analysis')
+        println("$e.message")
     }
 
     println()
@@ -43,7 +47,7 @@ for (String filePath : args) {
     codeGenerator.reset()
 }
 
-void compile(File file) throws LexicalException, ParsingException {
+void compile(File file) throws LexicalException, ParsingException, SemanticException {
     String text = file.getText()
     println("Text:\n$text")
     List<Token> tokens = lexicalAnalyzer.toTokens(text)

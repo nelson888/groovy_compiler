@@ -3,6 +3,8 @@ package com.tambapps.compiler.analyzer
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 
+import java.util.concurrent.LinkedBlockingDeque
+
 class CodeGenerator {
 
     private static final Map<TokenNodeType, String> COMMAND_MAP
@@ -33,6 +35,7 @@ class CodeGenerator {
     int nlabel = 0
 
     private final StringBuilder builder
+    private final Deque<Integer> loopExitDeque = new LinkedBlockingDeque<>()
 
     CodeGenerator() {
         builder = new StringBuilder()
@@ -94,17 +97,39 @@ class CodeGenerator {
                 genCode(node.getChild(i))
             }
 
-        } else if(t == TokenNodeType.COND){
-            int l = nlabel++
-            genCode(node.getChild(0))
-            println("jumpf l$l")
-            genCode(node.getChild(1))
-            println(".l$l")
+        } else if(t == TokenNodeType.COND) {
+            if (node.nbChildren() == 2) { //if without else
+                int l = nlabel++
+                genCode(node.getChild(0))
+                println("jumpf l$l")
+                genCode(node.getChild(1))
+                println(".l$l")
+            } else { //if with else
+                int l1 = nlabel++
+                int l2 = nlabel++
+                genCode(node.getChild(0))
+                println("jumpf l$l1")
+                genCode(node.getChild(1)) //print body
+                println("jump l$l2")
+                println(".l$l1")
+                genCode(node.getChild(2))
+                println(".l$l2")
+            }
         } else if (t == TokenNodeType.PRINT) {
             genCode(node.getChild(0))
             println("out.i")
             println("push.i 10")
             println("out.c")
+        } else if (t == TokenNodeType.BREAK) {
+            println("jumpf l${loopExitDeque.removeLast()}")
+        } else if (t == TokenNodeType.LOOP) {
+            int lStart = nlabel++
+            int lExit = nlabel++
+            loopExitDeque.push(lExit)
+            println(".l$lStart")
+            genCode(node.getChild(0))
+            println("jump l$lStart")
+            println(".l$lExit") //loop exit
         }
     }
 

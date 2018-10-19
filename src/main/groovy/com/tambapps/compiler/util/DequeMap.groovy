@@ -1,5 +1,7 @@
 package com.tambapps.compiler.util
 
+import com.tambapps.compiler.exception.SymbolException
+
 import java.util.concurrent.LinkedBlockingDeque
 
 class DequeMap {
@@ -15,14 +17,19 @@ class DequeMap {
         symbolsMap.push(new HashMap<>())
     }
 
-    void endBlock(){
-        symbolsMap.pop()
+    void endBlock() {
+        try {
+            symbolsMap.pop()
+        } catch(NoSuchElementException e) {
+            throw new SymbolException("There isn't any scope to end")
+        }
+
     }
 
     Symbol newSymbol(String ident){
         def map = symbolsMap.peek()
         if (map.containsKey(ident)) {
-            throw new RuntimeException("Already defined variable")
+            throw new SymbolException("Already defined variable")
         }
         Symbol s = new Symbol(ident)
         map.put(ident, s)
@@ -35,6 +42,6 @@ class DequeMap {
                 return map.get(ident)
             }
         }
-        throw new RuntimeException("Symbol not found")
+        throw new SymbolException("Symbol not found")
     }
 }

@@ -123,7 +123,7 @@ class Parser { //Syntax analyzer
                 TokenNode test = expression()
                 accept(TokenType.PARENT_CLOSE)
                 TokenNode S = statement()
-                cond.addChildren(test, S)
+                cond.addChildren(test, S, new TokenNode(TokenNodeType.BREAK, cond.l, cond.c))
                 return N
             case TokenType.FOR: //for (init;test;step) S
                 TokenNode N = new TokenNode(accept(TokenType.FOR)) //noeud seq
