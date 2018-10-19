@@ -8,6 +8,7 @@ enum TokenNodeType {
     EQUAL, NOT_EQUAL, STRICT_INF, STRICT_SUP, SUP, INF, AND, OR,
     CONSTANT,
     DROP,ASSIGNMENT,VAR_REF, VAR_DECL,
+    COND, BREAK, LOOP,
     PROG, BLOC, SEQ;
 
     boolean isUnaryOperator() {
