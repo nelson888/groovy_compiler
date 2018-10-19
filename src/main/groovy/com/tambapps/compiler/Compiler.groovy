@@ -33,7 +33,6 @@ for (String filePath : args) {
   } catch (LexicalException e) {
     println('Error while performing lexical analysis')
     println("$e.message")
-    return
   } catch (ParsingException e) {
     println('Error while performing parsing')
     println("$e.message")
