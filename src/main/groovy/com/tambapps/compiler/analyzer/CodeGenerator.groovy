@@ -38,9 +38,11 @@ class CodeGenerator {
         builder = new StringBuilder()
     }
 
-    String compile(TokenNode node) {
+    String compile(TokenNode node, int nbslot) {
         println(".start")
-        println("push.i 0")
+        for (int i = 0; i < nbslot; i++) {
+            println("push.i 0")
+        }
         genCode(node)
         println("out.i")
         println("push.i 10")
@@ -100,7 +102,7 @@ class CodeGenerator {
             int l = nlabel++
             genCode(node.getChild(0))
             println("jumpf l$l")
-            gencode(node.getChild(1))
+            genCode(node.getChild(1))
             println(".l$l")
             
         }

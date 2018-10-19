@@ -3,6 +3,7 @@ package com.tambapps.compiler
 import com.tambapps.compiler.analyzer.CodeGenerator
 import com.tambapps.compiler.analyzer.LexicalAnalyzer
 import com.tambapps.compiler.analyzer.Parser
+import com.tambapps.compiler.analyzer.SementicAnalyzer
 import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.exception.LexicalException
@@ -16,6 +17,7 @@ if (args.length <= 0) {
 lexicalAnalyzer = new LexicalAnalyzer()
 parser = new Parser()
 codeGenerator = new CodeGenerator()
+sementicAnalyzor = new SementicAnalyzer()
 
 for (String filePath : args) {
     File file = new File(filePath)
@@ -44,7 +46,7 @@ for (String filePath : args) {
 void compile(File file) throws LexicalException, ParsingException {
     List<Token> tokens = lexicalAnalyzer.toTokens(file)
     TokenNode tree = parser.parse(tokens)
-    String code = codeGenerator.compile(tree)
+    String code = codeGenerator.compile(tree, sementicAnalyzor.nbSlot)
 
     File compiled = new File(file.parentFile, file.name + '.code')
     compiled.bytes = code.getBytes()

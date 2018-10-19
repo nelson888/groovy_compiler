@@ -19,7 +19,7 @@ class DequeMap {
         if (map.containsKey(ident)){
             throw new RuntimeException("Already defined variable")
         }
-        Symbol s = new Object()
+        Symbol s = new Symbol(ident)
         map.put(ident, s)
         return s
     }
