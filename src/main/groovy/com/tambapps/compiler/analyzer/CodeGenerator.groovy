@@ -67,12 +67,12 @@ class CodeGenerator {
             genCode(node.getChild(0))
             println("drop")
         } else if (t == TokenNodeType.VAR_REF){
-            println("get $node.value.idx")
+            println("get $node.value.index")
         } else if (t == TokenNodeType.ASSIGNMENT){
             genCode(node.getChild(1))
-            println("drop")
+            println("dup")
             TokenNode nodeChild = node.getChild(0)
-            println("set $nodeChild.value.idx)")
+            println("set $nodeChild.value.index")
         }
     }
 

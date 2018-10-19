@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'application'
 
-mainClassName = "com.tambapps.compiler.CompileScript"
+mainClassName = "com.tambapps.compiler.Compiler"
 version = '1.0'
 archivesBaseName = "compiler"
 

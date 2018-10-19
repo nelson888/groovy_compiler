@@ -6,7 +6,14 @@ class TokenNode extends AbstractToken {
     private final List<TokenNode> children = new ArrayList<>(3)
 
     TokenNode(Token token, TokenNodeType type) {
-        super(token.l, token.c, token.value)
+        this(token, type, token.value)
+    }
+
+    TokenNode(Token token, TokenNodeType type, def value) {
+        super(token.l, token.c, value)
+        if (type == null) {
+            throw new IllegalArgumentException("$type cannot bu null")
+        }
         this.type = type
     }
 

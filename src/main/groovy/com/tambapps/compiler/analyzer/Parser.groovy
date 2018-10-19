@@ -24,7 +24,7 @@ class Parser { //Syntax analyzer
     TokenNode parse(tokens) {
         this.tokens = tokens
         TokenNode P = new TokenNode(TokenNodeType.PROG, new Token(0, 0, null, null), [])
-        while (currentIndex < tokens.size()) {
+        while (currentIndex < tokens.size() - 1) {
             TokenNode n = statement()
             P.addChild(n)
         }
@@ -33,19 +33,18 @@ class Parser { //Syntax analyzer
 
     private TokenNode atome() {
         Token t = getCurrent()
+        moveForward()
         switch (t.type) {
             case TokenType.CONSTANT:
-            case TokenType.IDENTIFIER:
-                moveForward()
                 return new TokenNode(t)
+            case TokenType.IDENTIFIER:
+                return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value, 0)) //TODO pour le moment on traite qu'une variable
             case TokenType.PLUS:
             case TokenType.MINUS:
             case TokenType.NOT:
-                moveForward()
                 TokenNode node = atome()
                 return new TokenNode(TokenUtils.UNARY_OPERATOR_MAP.get(t.type), t, [node])
             case TokenType.PARENT_OPEN:
-                moveForward()
                 TokenNode node = expression()
                 if (getCurrent().type != TokenType.PARENT_CLOSE) {
                     throw new ParsingException("Parenthesis should be close", node.l, node.c)
@@ -81,7 +80,7 @@ class Parser { //Syntax analyzer
                 accept(TokenType.VAR)
                 Token tokIdent = accept(TokenType.IDENTIFIER)
                 accept(TokenType.SEMICOLON)
-                return new TokenNode(tokIdent, TokenNodeType.VAR)
+                return new TokenNode(tokIdent, TokenNodeType.VAR_DECL, new VarInfo(tokIdent.value,  0)) //TODO pour le moment on traite qu'une variable
             default: // expression;
                 TokenNode e = expression()
                 return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])
@@ -114,4 +113,21 @@ class Parser { //Syntax analyzer
         return token
     }
 
+    static class VarInfo {
+        def name
+        int index
+
+        VarInfo(def value, int index) {
+            this.name = value
+            this.index = index
+        }
+
+        @Override
+        String toString() {
+            return "{" +
+                "name=" + name +
+                ", index=" + index +
+                '}'
+        }
+    }
 }
