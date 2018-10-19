@@ -54,82 +54,82 @@ class CodeGenerator {
 
     private void genCode(TokenNode node) {
         TokenNodeType t = node.type
-        if (t == TokenNodeType.PROG || t == TokenNodeType.SEQ) {
-            for(int i = 0; i<node.nbChildren();i++){
-                genCode(node.getChild(i))
-            }
 
-        } else if (t == TokenNodeType.CONSTANT) {
-
-            println("push.i $node.value")
-
+        if (t.isBinaryOperator() && t != TokenNodeType.POWER) { //TODO POWER NOT HANDLED YET
+            genCode(node.getChild(0))
+            genCode(node.getChild(1))
+            println(COMMAND_MAP.get(t))
+            return
         } else if (t.isUnaryOperator()) {
-
             println("push.i 0")
             genCode(node.getChild(0))
             println(COMMAND_MAP.get(t))
+        }
 
-        } else if (t.isBinaryOperator() && t != TokenNodeType.POWER) {
-
-            genCode(node.getChild(0))
-            genCode(node.getChild(1))
-            println(COMMAND_MAP.get(t))
-
-        } else if (t == TokenNodeType.DROP) {
-
-            genCode(node.getChild(0))
-            println("drop")
-
-        } else if (t == TokenNodeType.VAR_REF){
-
-            println("get $node.value.index")
-
-        } else if (t == TokenNodeType.ASSIGNMENT){
-
-            genCode(node.getChild(1))
-            println("dup")
-            TokenNode nodeChild = node.getChild(0)
-            println("set $nodeChild.value.index")
-
-        } else if(t == TokenNodeType.BLOC) {
-
-            for (int i = 0; i < node.nbChildren(); i++) {
-                genCode(node.getChild(i))
-            }
-
-        } else if(t == TokenNodeType.COND) {
-            if (node.nbChildren() == 2) { //if without else
-                int l = nlabel++
+        switch (t) {
+            case TokenNodeType.PROG:
+            case TokenNodeType.SEQ:
+                for(int i = 0; i<node.nbChildren();i++){
+                    genCode(node.getChild(i))
+                }
+                break
+            case TokenNodeType.CONSTANT:
+                println("push.i $node.value")
+                break
+            case TokenNodeType.DROP:
                 genCode(node.getChild(0))
-                println("jumpf l$l")
+                println("drop")
+                break
+            case TokenNodeType.VAR_REF:
+                println("get $node.value.index")
+                break
+            case TokenNodeType.ASSIGNMENT:
                 genCode(node.getChild(1))
-                println(".l$l")
-            } else { //if with else
-                int l1 = nlabel++
-                int l2 = nlabel++
+                println("dup")
+                TokenNode nodeChild = node.getChild(0)
+                println("set $nodeChild.value.index")
+                break
+            case TokenNodeType.BLOC:
+                for (int i = 0; i < node.nbChildren(); i++) {
+                    genCode(node.getChild(i))
+                }
+                break
+            case TokenNodeType.COND:
+                if (node.nbChildren() == 2) { //if without else
+                    int l = nlabel++
+                    genCode(node.getChild(0))
+                    println("jumpf l$l")
+                    genCode(node.getChild(1))
+                    println(".l$l")
+                } else { //if with else
+                    int l1 = nlabel++
+                    int l2 = nlabel++
+                    genCode(node.getChild(0))
+                    println("jumpf l$l1")
+                    genCode(node.getChild(1)) //print body
+                    println("jump l$l2")
+                    println(".l$l1")
+                    genCode(node.getChild(2))
+                    println(".l$l2")
+                }
+                break
+            case TokenNodeType.PRINT:
                 genCode(node.getChild(0))
-                println("jumpf l$l1")
-                genCode(node.getChild(1)) //print body
-                println("jump l$l2")
-                println(".l$l1")
-                genCode(node.getChild(2))
-                println(".l$l2")
-            }
-        } else if (t == TokenNodeType.PRINT) {
-            genCode(node.getChild(0))
-            println("out.i")
-            println("push.i 10")
-            println("out.c")
-        } else if (t == TokenNodeType.BREAK) {
-            println("jump l${loopExitDeque.removeLast()}")
-        } else if (t == TokenNodeType.LOOP) {
-            int lStart = nlabel++
-            int lExit = nlabel++
-            loopExitDeque.push(lExit)
-            println(".l$lStart")
-            genCode(node.getChild(0))
-            println("jump l$lStart")
-            println(".l$lExit") //loop exit
+                println("out.i")
+                println("push.i 10")
+                println("out.c")
+                break
+            case TokenNodeType.BREAK:
+                println("jump l${loopExitDeque.removeLast()}")
+                break
+            case TokenNodeType.LOOP:
+                int lStart = nlabel++
+                int lExit = nlabel++
+                loopExitDeque.push(lExit)
+                println(".l$lStart")
+                genCode(node.getChild(0))
+                println("jump l$lStart")
+                println(".l$lExit") //loop exit
         }
     }
 
