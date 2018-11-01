@@ -27,11 +27,46 @@ To execute the compiled code, run
 ./msm file1.code
 ```
 
-## What is working (currently)
-This compiler can compile only arithmetic operations
+## What is supported (currently)
+This compiler can compile
+
+### Arithmetic expressions
 It supports basic and boolean operators, except the power (^)
+e.g:
+```python
+4 + 2
+4 - (6 * 4 / 2)
+5 % (4 - 4 * (5 - 3))
+(1 >= 2) && (3 != 2)
+(3 and 0) == (0 or 0)
+```
 
-e.g: 4 + 2, 4 - (6 * 4 / 2), 5 % (4 - 4 * (5 - 3)), (1 >= 2) &&, (3 and 0) == (0 or 0)
+### Variables
+You can declare, and assign values to variables:
+```javascript
+var x;
+x = 14;
+var y = 3;
+var z = x + 5* y;
+```
+### for and while loops
+for and while loops are handled, like in the following example
+```javascript
+var i;
+for (i = 0; i < 10; i = i + 1) {
+    print i;
+}
+```
 
+```javascript
+var i = 0;
+while (i < 10) {
+    print i;
+    i = i + 1;
+}
+```
+You can print the value of variable with the `print` function
+
+## Error handling
 When there is an error while compiling, the error is displayed on the standard output.
 You can see what caused the error (the line and column of the error is displayed but it is not working, sometimes there is a little offset for the column).
