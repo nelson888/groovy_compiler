@@ -9,7 +9,7 @@ enum TokenNodeType {
   CONSTANT,
   DROP, ASSIGNMENT, VAR_REF, VAR_DECL,
   COND, BREAK, LOOP,
-  PROG, BLOC, SEQ,
+  PROG, BLOC, SEQ, FUNCTION, RETURN,
   PRINT;
 
   boolean isUnaryOperator() {

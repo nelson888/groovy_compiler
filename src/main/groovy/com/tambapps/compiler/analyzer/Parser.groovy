@@ -152,10 +152,41 @@ class Parser { //Syntax analyzer
         print.addChild(e)
         accept(TokenType.SEMICOLON)
         return print
+
+      case TokenType.RETURN:
+        TokenNode n = new TokenNode(getCurrent())
+        n.addChild(expression())
+        accept(TokenType.SEMICOLON)
+        return n
+
       default: // expression;
         TokenNode e = expression()
         return new TokenNode(TokenNodeType.DROP, accept(TokenType.SEMICOLON), [e])
     }
+  }
+
+  private TokenNode programme(){
+
+    TokenNode p = new TokenNode(TokenNodeType.PROG, 0,0)
+    while (getCurrent().type != TokenType.END_OF_FILE){
+      p.addChild(fonction())
+    }
+    return p
+  }
+
+  private TokenNode fonction(){
+    Token t = accept(TokenType.IDENTIFIER)
+    TokenNode n = new TokenNode(t,TokenNodeType.FUNCTION)
+    accept(TokenType.PARENT_OPEN)
+    while (getCurrent().type != TokenType.PARENT_CLOSE){
+      Token acc = accept(TokenType.IDENTIFIER)
+      n.addChild(new TokenNode(acc,TokenNodeType.VAR_DECL))
+      if (getCurrent().type == TokenType.COMMA){
+        accept(TokenType.COMMA)
+      }
+    }
+    n.addChild(statement())
+    return n
   }
 
   private void moveForward() {

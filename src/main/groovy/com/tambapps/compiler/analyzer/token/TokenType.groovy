@@ -10,7 +10,7 @@ enum TokenType {
   ASSIGNMENT('='),
   EQUAL('=='), NOT_EQUAL('!='), STRICT_SUP('>'), STRICT_INF('<'), SUP('>='), INF('<='), AND('and'), OR('or'), //binary operator
   PARENT_OPEN('('), PARENT_CLOSE(')'), COMMA(','), SEMICOLON(';'), ACCOLADE_OPEN('{'), ACCOLADE_CLOSE('}'),
-  IF('if'), ELSE('else'), FOR('for'), WHILE('while'), PRINT('print'),
+  IF('if'), ELSE('else'), FOR('for'), WHILE('while'), PRINT('print'), RETURN('return'),
   VAR('var'),
   END_OF_FILE;
 
