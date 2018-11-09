@@ -23,12 +23,7 @@ class Parser { //Syntax analyzer
    */
   TokenNode parse(tokens) {
     this.tokens = tokens
-    TokenNode P = new TokenNode(TokenNodeType.PROG, new Token(0, 0, null, null), [])
-    while (currentIndex < tokens.size() - 1) {
-      TokenNode n = statement()
-      P.addChild(n)
-    }
-    return P
+    return programme()
   }
 
   private TokenNode atome() {
@@ -48,6 +43,7 @@ class Parser { //Syntax analyzer
                     }
                     accept(TokenType.COMMA)
                 }
+                accept(TokenType.PARENT_CLOSE)
                 return N
             }
         return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value))
@@ -166,7 +162,7 @@ class Parser { //Syntax analyzer
         return print
 
       case TokenType.RETURN:
-        TokenNode n = new TokenNode(getCurrent())
+        TokenNode n = new TokenNode(accept(TokenType.RETURN))
         n.addChild(expression())
         accept(TokenType.SEMICOLON)
         return n
@@ -178,7 +174,6 @@ class Parser { //Syntax analyzer
   }
 
   private TokenNode programme(){
-
     TokenNode p = new TokenNode(TokenNodeType.PROG, 0,0)
     while (getCurrent().type != TokenType.END_OF_FILE){
       p.addChild(fonction())
@@ -188,7 +183,7 @@ class Parser { //Syntax analyzer
 
   private TokenNode fonction(){
     Token t = accept(TokenType.IDENTIFIER)
-    TokenNode n = new TokenNode(t,TokenNodeType.FUNCTION)
+    TokenNode n = new TokenNode(t,TokenNodeType.FUNCTION, [name: t.value])
     accept(TokenType.PARENT_OPEN)
     while (getCurrent().type != TokenType.PARENT_CLOSE){
       Token acc = accept(TokenType.IDENTIFIER)
@@ -197,6 +192,7 @@ class Parser { //Syntax analyzer
         accept(TokenType.COMMA)
       }
     }
+    accept(TokenType.PARENT_CLOSE)
     n.addChild(statement())
     return n
   }

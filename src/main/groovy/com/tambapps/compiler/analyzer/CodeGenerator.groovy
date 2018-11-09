@@ -42,10 +42,10 @@ class CodeGenerator {
 
   String compile(TokenNode node, int nbslot) {
     println(".start")
-
-    genCode(node)
-
+    println("prep main")
+    println("call 0")
     println("halt")
+    genCode(node)
     return builder.toString()
   }
 
@@ -134,19 +134,19 @@ class CodeGenerator {
           println("push.i 0")
         }
         genCode(node.getChild(node.nbChildren()-1))
-        print("push.i 0")
-        print("ret")
+        println("push.i 0")
+        println("ret")
         break
       case TokenNodeType.FUNCTION_CALL:
-        print("prep "+node.value.name)
+        println("prep "+node.value.name)
         for (int i = 0; i<node.nbChildren(); i++){
           genCode(node.getChild(i))
         }
-        print("call "+node.nbChildren())
+        println("call "+node.nbChildren())
         break
       case TokenNodeType.RETURN:
         genCode(node.getChild(0))
-        print("ret")
+        println("ret")
         break
     }
   }
