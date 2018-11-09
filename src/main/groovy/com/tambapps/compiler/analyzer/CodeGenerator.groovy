@@ -42,9 +42,7 @@ class CodeGenerator {
 
   String compile(TokenNode node, int nbslot) {
     println(".start")
-    for (int i = 0; i < nbslot; i++) {
-      println("push.i 0")
-    }
+
     genCode(node)
 
     println("halt")
@@ -129,6 +127,27 @@ class CodeGenerator {
         genCode(node.getChild(0))
         println("jump l$lStart")
         println(".l$lExit") //loop exit
+        break
+      case TokenNodeType.FUNCTION:
+        println("."+node.value.name)
+        for (int i = 0; i < node.value.nbSlot; i++) {
+          println("push.i 0")
+        }
+        genCode(node.getChild(node.nbChildren()-1))
+        print("push.i 0")
+        print("ret")
+        break
+      case TokenNodeType.FUNCTION_CALL:
+        print("prep "+node.value.name)
+        for (int i = 0; i<node.nbChildren(); i++){
+          genCode(node.getChild(i))
+        }
+        print("call "+node.nbChildren())
+        break
+      case TokenNodeType.RETURN:
+        genCode(node.getChild(0))
+        print("ret")
+        break
     }
   }
 
