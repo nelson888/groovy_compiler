@@ -46,7 +46,7 @@ class Parser { //Syntax analyzer
                 accept(TokenType.PARENT_CLOSE)
                 return N
             }
-        return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value))
+        return new TokenNode(t, TokenNodeType.VAR_REF, [name: t.value])
       case TokenType.PLUS:
       case TokenType.MINUS:
       case TokenType.NOT:
@@ -223,21 +223,4 @@ class Parser { //Syntax analyzer
     return token
   }
 
-  static class VarInfo {
-    String name
-    Integer index
-
-    VarInfo(def value) {
-      this.name = value
-      index = null
-    }
-
-    @Override
-    String toString() {
-      return "{" +
-          "name=" + name +
-          ", index=" + index +
-          '}'
-    }
-  }
 }
