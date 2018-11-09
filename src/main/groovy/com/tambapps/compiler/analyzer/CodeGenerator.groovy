@@ -136,9 +136,6 @@ class CodeGenerator {
         println(".l$lExit") //loop exit
         break
       case TokenNodeType.FUNCTION:
-        println("")
-        println("")
-        println("")
         println("."+node.value.name)
         for (int i = 0; i < node.value.nbSlot; i++) {
           println("push.i 0")
@@ -146,9 +143,6 @@ class CodeGenerator {
         genCode(node.getChild(node.nbChildren()-1))
         println("push.i 0")
         println("ret")
-        println("")
-        println("")
-        println("")
         break
       case TokenNodeType.FUNCTION_CALL:
         println("prep "+node.value.name)
