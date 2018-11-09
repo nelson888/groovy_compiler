@@ -38,6 +38,18 @@ class Parser { //Syntax analyzer
       case TokenType.CONSTANT:
         return new TokenNode(t)
       case TokenType.IDENTIFIER:
+            if (getCurrent().type == TokenType.PARENT_OPEN) {
+                accept(TokenType.PARENT_OPEN)
+                TokenNode N = new TokenNode(t, TokenNodeType.FUNCTION_CALL, [name: t.value])
+                while(getCurrent().type != TokenType.PARENT_CLOSE) {
+                    N.addChild(expression()) //arg of function
+                    if (getCurrent().type == TokenType.PARENT_CLOSE) {
+                        break
+                    }
+                    accept(TokenType.COMMA)
+                }
+                return N
+            }
         return new TokenNode(t, TokenNodeType.VAR_REF, new VarInfo(t.value))
       case TokenType.PLUS:
       case TokenType.MINUS:
