@@ -48,6 +48,7 @@ class SemanticAnalyzer {
         break
 
       case TokenNodeType.FUNCTION:
+        nbSlot = 0 //TODO mettre maxslot aussi a 0
         Symbol s = dequeMap.newSymbol(node.value.name)
         int nbArgs = node.nbChildren() - 1
         s.nbArgs = nbArgs
@@ -60,7 +61,7 @@ class SemanticAnalyzer {
         s.slot = nbSlot - s.nbArgs
         break
 
-      case TokenNodeType.FUNCTION_CALL:
+      case TokenNodeType.FUNCTION_CALL: //TODO handle symbol exceptions
         Symbol s = dequeMap.findSymbol(node.value.name)
         if (!s.function) {
           throw new SemanticException("Cannot call a variable ($s.ident)", node.l, node.c)

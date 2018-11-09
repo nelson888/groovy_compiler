@@ -7,6 +7,7 @@ import java.util.concurrent.LinkedBlockingDeque
 
 class CodeGenerator {
 
+  private static final String POWER_FUNC_NAME = "power"
   private static final Map<TokenNodeType, String> COMMAND_MAP
   static {
     Map<TokenNodeType, String> commandMap = new HashMap<>()
@@ -27,14 +28,13 @@ class CodeGenerator {
     commandMap.put(TokenNodeType.INF, "cmple.i")
     commandMap.put(TokenNodeType.SUP, "cmpge.i")
     commandMap.put(TokenNodeType.STRICT_INF, "cmplt.i")
-    // commandMap.put(TokenNodeType.POWER, CodeGenerator.class.getResourceAsStream("pow.txt").getText())
 
     COMMAND_MAP = Collections.unmodifiableMap(commandMap)
   }
 
   private final StringBuilder builder
   private final Deque<Integer> loopExitDeque = new LinkedBlockingDeque<>()
-  private int labels = 0
+  private int labels = 0 // because function power use 3 labels
 
   CodeGenerator() {
     builder = new StringBuilder()
@@ -52,10 +52,17 @@ class CodeGenerator {
   private void genCode(TokenNode node) {
     TokenNodeType t = node.type
 
-    if (t.isBinaryOperator() && t != TokenNodeType.POWER) { //TODO POWER NOT HANDLED YET
-      genCode(node.getChild(0))
-      genCode(node.getChild(1))
-      println(COMMAND_MAP.get(t))
+    if (t.isBinaryOperator()) {
+      if (t != TokenNodeType.POWER) {
+        genCode(node.getChild(0))
+        genCode(node.getChild(1))
+        println(COMMAND_MAP.get(t))
+      } else {
+        println("prep $POWER_FUNC_NAME")
+        genCode(node.getChild(0))
+        genCode(node.getChild(1))
+        println("call 2")
+      }
       return
     } else if (t.isUnaryOperator()) {
       println("push.i 0")
@@ -129,6 +136,9 @@ class CodeGenerator {
         println(".l$lExit") //loop exit
         break
       case TokenNodeType.FUNCTION:
+        println("")
+        println("")
+        println("")
         println("."+node.value.name)
         for (int i = 0; i < node.value.nbSlot; i++) {
           println("push.i 0")
@@ -136,6 +146,9 @@ class CodeGenerator {
         genCode(node.getChild(node.nbChildren()-1))
         println("push.i 0")
         println("ret")
+        println("")
+        println("")
+        println("")
         break
       case TokenNodeType.FUNCTION_CALL:
         println("prep "+node.value.name)

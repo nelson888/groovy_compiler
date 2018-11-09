@@ -56,8 +56,15 @@ class LexicalAnalyzer {
   }
 
   List<Token> toTokens(String content) throws LexicalException {
+    return convert(buildInFunctions() + content + LINE_BREAK) //add line return to simulate end of file
+  }
+
+  private String buildInFunctions() {
+    return LexicalAnalyzer.class.getResource("/functions").getText()
+  }
+
+  private List<Token> convert(String content) throws LexicalException {
     List<Token> tokens = new ArrayList<>()
-    content = content + LINE_BREAK //add line return to simulate end of file
 
     for (int i = 0; i < content.size(); i++) {
       char c = content.charAt(i)

@@ -1,0 +1,10 @@
+power(a, n) {
+  if (n == 0) return 0;
+  if (n == 1) return a;
+  if (n % 2 == 0) {
+     var p = power(a, n / 2);
+     return p * p;
+  }
+  return a * power(a, n - 1);
+}
+

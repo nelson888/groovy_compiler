@@ -31,7 +31,7 @@ To execute the compiled code, run
 This compiler can compile
 
 ### Arithmetic expressions
-It supports basic and boolean operators, except the power (^)
+It supports basic and boolean operators
 e.g:
 ```python
 4 + 2
@@ -70,3 +70,21 @@ You can print the value of variable with the `print` function
 ## Error handling
 When there is an error while compiling, the error is displayed on the standard output.
 You can see what caused the error (the line and column of the error is displayed but it is not working, sometimes there is a little offset for the column).
+
+##Write a program
+A source code should have functions, with one named main() with no parameters like in the following example
+
+```
+add1(a) {
+    return a + 1;
+}
+
+main() {
+   print add1(6);
+}
+```
+
+The main() function will be executed
+
+There are some already built-in functions so you can't write a functions called:
+- power

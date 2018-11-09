@@ -96,7 +96,7 @@ class Parser { //Syntax analyzer
           TokenNode declTok = new TokenNode(tokIdent, TokenNodeType.VAR_DECL)
           TokenNode value = expression()
           TokenNode assignTok = new TokenNode(assignToken, TokenNodeType.ASSIGNMENT, null)
-          assignTok.addChildren(new TokenNode(tokIdent, TokenNodeType.VAR_REF, new VarInfo(tokIdent.value)), value)
+          assignTok.addChildren(new TokenNode(tokIdent, TokenNodeType.VAR_REF, [name: tokIdent.value]), value)
           seq.addChildren(declTok, assignTok)
           accept(TokenType.SEMICOLON)
           return seq
