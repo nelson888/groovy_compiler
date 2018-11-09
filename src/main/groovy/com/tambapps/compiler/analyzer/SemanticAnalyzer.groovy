@@ -81,7 +81,4 @@ class SemanticAnalyzer {
     }
   }
 
-  int getNbSlot() {
-    return nbSlot
-  }
 }

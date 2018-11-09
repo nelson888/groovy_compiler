@@ -50,7 +50,7 @@ void compile(File file) throws LexicalException, ParsingException, SemanticExcep
   List<Token> tokens = lexicalAnalyzer.toTokens(file)
   TokenNode tree = parser.parse(tokens)
   semanticAnalyzor.process(tree)
-  String code = codeGenerator.compile(tree, semanticAnalyzor.nbSlot)
+  String code = codeGenerator.compile(tree)
 
   File compiled = new File(file.parentFile, file.name + '.code')
   compiled.bytes = code.getBytes()

@@ -40,7 +40,7 @@ class CodeGenerator {
     builder = new StringBuilder()
   }
 
-  String compile(TokenNode node, int nbslot) {
+  String compile(TokenNode node) {
     println(".start")
     println("prep main")
     println("call 0")

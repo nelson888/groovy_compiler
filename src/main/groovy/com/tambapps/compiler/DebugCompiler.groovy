@@ -55,7 +55,7 @@ void compile(File file) throws LexicalException, ParsingException, SemanticExcep
   println("Token tree:\n${tree.treeString()}")
   semanticAnalyzor.process(tree)
   println("\nAfter semantic analysis:\n${tree.treeString()}")
-  String code = codeGenerator.compile(tree, semanticAnalyzor.nbSlot)
+  String code = codeGenerator.compile(tree)
   println("Generated code:\n************\n\n$code\n************\n")
   File compiled = new File(file.parentFile, file.name + '.code')
   compiled.bytes = code.getBytes()
