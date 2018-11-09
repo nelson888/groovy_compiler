@@ -86,5 +86,5 @@ main() {
 
 The main() function will be executed
 
-There are some already built-in functions so you can't write a functions called:
+There are some already built-in functions so you can't write a functions named:
 - power
