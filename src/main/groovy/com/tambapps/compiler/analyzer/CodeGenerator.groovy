@@ -93,8 +93,7 @@ class CodeGenerator {
           genCode(node.getChild(0).getChild(0))
           genCode(node.getChild(1))
           println("write")
-        }
-        else if (node.getChild(0) == TokenNodeType.VAR_REF){
+        } else if (node.getChild(0).type == TokenNodeType.VAR_REF){
           genCode(node.getChild(1))
           println("dup")
           TokenNode nodeChild = node.getChild(0)
@@ -115,6 +114,7 @@ class CodeGenerator {
         println("prep malloc")
         genCode(node.getChild(0))
         println("call 1")
+        break
       case TokenNodeType.BLOC:
         for (int i = 0; i < node.nbChildren(); i++) {
           genCode(node.getChild(i))

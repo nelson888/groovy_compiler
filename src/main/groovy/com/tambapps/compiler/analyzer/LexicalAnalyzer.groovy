@@ -56,7 +56,9 @@ class LexicalAnalyzer {
   }
 
   List<Token> toTokens(String content) throws LexicalException {
-    return convert(buildInFunctions() + content + LINE_BREAK) //add line return to simulate end of file
+    String functions = buildInFunctions()
+    lig = -functions.readLines().size()
+    return convert(functions + content + LINE_BREAK) //add line return to simulate end of file
   }
 
   private String buildInFunctions() {
