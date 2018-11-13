@@ -90,11 +90,11 @@ class CodeGenerator {
         break
       case TokenNodeType.ASSIGNMENT:
         if (node.getChild(0).type == TokenNodeType.D_REF){
-          genCode(node.getChild(0))
+          genCode(node.getChild(0).getChild(0))
           genCode(node.getChild(1))
           println("write")
         }
-        else {
+        else if (node.getChild(0) == TokenNodeType.VAR_REF){
           genCode(node.getChild(1))
           println("dup")
           TokenNode nodeChild = node.getChild(0)
