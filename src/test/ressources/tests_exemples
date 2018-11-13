@@ -1,0 +1,10 @@
+Exemples affectations:
+    Tests naïfs:
+        a=3;
+        a= 5+2*b;
+
+    Tests avancés :
+        a=b=7;
+        a=a=....;
+        toto(a=7);
+

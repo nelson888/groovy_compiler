@@ -35,6 +35,9 @@ class SemanticAnalyzer {
         node.value.index = s.slot
         break
 
+      case TokenNodeType.D_REF:
+
+
       case TokenNodeType.BLOC:
         dequeMap.newBlock()
         for (int i = 0; i < node.nbChildren(); i++) {
