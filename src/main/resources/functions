@@ -8,3 +8,11 @@ power(a, n) {
   return a * power(a, n - 1);
 }
 
+malloc(n){
+  var addr = 0;
+  var ptr;
+  ptr = *addr;
+  *addr = ptr + n;
+  return ptr;
+}
+

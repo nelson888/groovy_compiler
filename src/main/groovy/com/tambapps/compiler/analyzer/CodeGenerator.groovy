@@ -1,5 +1,6 @@
 package com.tambapps.compiler.analyzer
 
+import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 
@@ -89,11 +90,9 @@ class CodeGenerator {
         break
       case TokenNodeType.ASSIGNMENT:
         if (node.getChild(0).type == TokenNodeType.D_REF){
-
           genCode(node.getChild(0))
           genCode(node.getChild(1))
           println("write")
-
         }
         else {
           genCode(node.getChild(1))
@@ -106,6 +105,16 @@ class CodeGenerator {
         genCode(node.getChild(0))
         println("read")
         break
+      case TokenNodeType.TAB_REF:
+        genCode(node.getChild(0))
+        genCode(node.getChild(1))
+        println("add.i")
+        println("read")
+        break
+      case TokenNodeType.TAB_DECL:
+        println("prep malloc")
+        genCode(node.getChild(0))
+        println("call 1")
       case TokenNodeType.BLOC:
         for (int i = 0; i < node.nbChildren(); i++) {
           genCode(node.getChild(i))
