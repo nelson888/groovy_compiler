@@ -10,7 +10,8 @@ enum TokenNodeType {
   DROP, ASSIGNMENT, VAR_REF, VAR_DECL,
   COND, BREAK, LOOP,
   PROG, BLOC, SEQ, FUNCTION, FUNCTION_CALL, RETURN,D_REF,
-  PRINT;
+  PRINT,
+  TAB_DECL, TAB_REF;
 
   boolean isUnaryOperator() {
     return Stream.of(PLUS_U, MINUS_U, NOT)
