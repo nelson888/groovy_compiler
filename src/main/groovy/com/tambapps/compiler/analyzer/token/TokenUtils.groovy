@@ -19,6 +19,7 @@ class TokenUtils {
     unaryMap.put(TokenType.PLUS, TokenNodeType.PLUS_U)
     unaryMap.put(TokenType.MINUS, TokenNodeType.MINUS_U)
     unaryMap.put(TokenType.NOT, TokenNodeType.NOT)
+    unaryMap.put(TokenType.MULTIPLY, TokenNodeType.D_REF)
 
     Map<TokenType, TokenNodeType> binaryMap = new HashMap<>()
     binaryMap.put(TokenType.PLUS, TokenNodeType.PLUS_B)

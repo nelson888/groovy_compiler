@@ -45,11 +45,16 @@ class Parser { //Syntax analyzer
                 }
                 accept(TokenType.PARENT_CLOSE)
                 return N
+            } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //tab[n]
+              TokenNode N = new TokenNode(t, TokenNodeType.TAB_REF, [new TokenNode(accept(TokenType.CONSTANT))])
+              accept(TokenType.PARENT_CLOSE)
+              return N
             }
         return new TokenNode(t, TokenNodeType.VAR_REF, [name: t.value])
       case TokenType.PLUS:
       case TokenType.MINUS:
       case TokenType.NOT:
+      case TokenType.MULTIPLY: //gerer déreferencement
         TokenNode node = atome()
         return new TokenNode(TokenUtils.UNARY_OPERATOR_MAP.get(t.type), t, [node])
       case TokenType.PARENT_OPEN:
@@ -100,6 +105,12 @@ class Parser { //Syntax analyzer
           seq.addChildren(declTok, assignTok)
           accept(TokenType.SEMICOLON)
           return seq
+        } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //var tab[n];
+          accept(TokenType.BRACKET_OPEN)
+          TokenNode index = new TokenNode(accept(TokenType.CONSTANT))
+          accept(TokenType.BRACKET_CLOSE)
+          accept(TokenType.SEMICOLON)
+          return new TokenNode(tokIdent, TokenNodeType.TAB_DECL, [tokIdent, index])
         }
         throw new ParsingException("Expected token $TokenType.SEMICOLON or $TokenType.ASSIGNMENT", tokIdent.l, tokIdent.c)
 
