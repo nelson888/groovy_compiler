@@ -88,10 +88,23 @@ class CodeGenerator {
         println("get $node.value.index")
         break
       case TokenNodeType.ASSIGNMENT:
-        genCode(node.getChild(1))
-        println("dup")
-        TokenNode nodeChild = node.getChild(0)
-        println("set $nodeChild.value.index")
+        if (node.getChild(0).type == TokenNodeType.D_REF){
+
+          genCode(node.getChild(0))
+          genCode(node.getChild(1))
+          println("write")
+
+        }
+        else {
+          genCode(node.getChild(1))
+          println("dup")
+          TokenNode nodeChild = node.getChild(0)
+          println("set $nodeChild.value.index")
+        }
+        break
+      case TokenNodeType.D_REF:
+        genCode(node.getChild(0))
+        println("read")
         break
       case TokenNodeType.BLOC:
         for (int i = 0; i < node.nbChildren(); i++) {
