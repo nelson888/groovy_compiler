@@ -44,4 +44,15 @@ class DequeMap {
     }
     throw new SymbolException("Symbol not found")
   }
+
+  Symbol findSymbolWithSlot(int slot) {
+    for (def map : symbolsMap.descendingIterator()) {
+      for (Symbol s : map.values()) {
+        if (s.slot == slot) {
+          return slot
+        }
+      }
+    }
+    throw new SymbolException("Symbol not found")
+  }
 }
