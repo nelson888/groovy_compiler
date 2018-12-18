@@ -7,6 +7,7 @@ class Symbol {
   String ident
   int slot
   int nbArgs = -1
+  int value //for evaluator
 
   @PackageScope
   Symbol(String s) {
