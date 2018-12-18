@@ -25,7 +25,7 @@ class Evaluator {
     this(functions, { o -> System.out.println(o) })
   }
 
-  void process(TokenNode node) throws SemanticException {
+  void process(TokenNode node) throws PointerException {
     switch (node.type) {
       case TokenNodeType.VAR_DECL:
         dequeMap.newSymbol(node.value)
