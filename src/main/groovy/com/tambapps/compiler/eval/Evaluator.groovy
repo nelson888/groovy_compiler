@@ -12,7 +12,7 @@ class Evaluator {
   private final List<TokenNode> functions
   private final Closure printer
   private DequeMap dequeMap
-  private Object returnValue = null
+  private Integer returnValue = null
 
   Evaluator(List<TokenNode> functions, Closure printer) {
     this.functions = functions
@@ -123,6 +123,10 @@ class Evaluator {
         return evaluate(e.getChild(0)) * evaluate(e.getChild(1))
       case TokenNodeType.DIVIDE:
         return evaluate(e.getChild(0)) / evaluate(e.getChild(1))
+      case TokenNodeType.MODULO:
+        return evaluate(e.getChild(0)) % evaluate(e.getChild(1))
+      case TokenNodeType.POWER:
+        return power(evaluate(e.getChild(0)), evaluate(e.getChild(1)))
       case TokenNodeType.OR:
         return intBool(evaluate(e.getChild(0)) || evaluate(e.getChild(1)))
       case TokenNodeType.AND:
@@ -139,6 +143,8 @@ class Evaluator {
         return intBool(evaluate(e.getChild(0)) <= evaluate(e.getChild(1)))
       case TokenNodeType.STRICT_INF:
         return intBool(evaluate(e.getChild(0)) < evaluate(e.getChild(1)))
+      case TokenNodeType.NOT:
+        return intBool(!evaluate(e.getChild(0)))
       case TokenNodeType.FUNCTION_CALL:
         Symbol funcData = dequeMap.findSymbol(e.value)
         TokenNode function = functions.find({ f -> funcData == f.value })
@@ -170,5 +176,15 @@ class Evaluator {
 
   private Object getReturnValue() {
     return returnValue
+  }
+
+  private power(int a, int n) {
+    if (n == 0) return 1
+    if (n == 1) return a
+    if (n % 2 == 0) {
+      int p = power(a, n / 2)
+      return p * p
+    }
+    return a * power(a, n - 1)
   }
 }
