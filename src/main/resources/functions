@@ -1,5 +1,6 @@
 power(a, n) {
-  if (n == 0) return 0;
+  if (n == 0) return 1;
+  if (a == 0) return 0;
   if (n == 1) return a;
   if (n % 2 == 0) {
      var p = power(a, n / 2);
