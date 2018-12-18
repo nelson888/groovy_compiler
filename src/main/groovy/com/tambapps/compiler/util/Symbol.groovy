@@ -20,8 +20,18 @@ class Symbol {
     this.nbArgs = nbArgs
   }
 
+  private Symbol(String ident, int slot, int nbArgs, int value) {
+    this.ident = ident
+    this.slot = slot
+    this.nbArgs = nbArgs
+    this.value = value
+  }
+
   boolean isFunction() {
     return nbArgs >= 0
   }
 
+  Symbol copy() {
+    return new Symbol(ident, slot, nbArgs, value)
+  }
 }
