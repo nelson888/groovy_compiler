@@ -7,10 +7,8 @@ import com.tambapps.compiler.analyzer.token.TokenNode
 class TokenNodeOptimizer {
 
   private List<NodeOptimizer> optimizers =
-      [
-          new ExpressionOptimizer(),
-          new UnusedVariableOptimizer()
-      ]
+      [new ExpressionOptimizer(),
+       new UnusedVariableOptimizer()]
 
   void optimize(TokenNode program) {
     for (def optimizer : optimizers) {

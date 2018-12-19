@@ -4,6 +4,10 @@ import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 import groovy.transform.PackageScope
 
+/**
+ * Optimize expression with constant operations by replacing the operation
+ * by the actual value
+ */
 @PackageScope
 class ExpressionOptimizer implements NodeOptimizer {
 
@@ -32,7 +36,7 @@ class ExpressionOptimizer implements NodeOptimizer {
     map.put(TokenNodeType.NOT, {a -> return intBool(!a) })
 
     OPERATOR_MAP = Collections.unmodifiableMap(map)
-  };
+  }
 
   @Override
   boolean isOptimizable(TokenNodeType type) {
@@ -42,20 +46,20 @@ class ExpressionOptimizer implements NodeOptimizer {
   @Override
   void optimizeNode(TokenNode parent, TokenNode node) {
     if (node.type.binaryOperator) {
-      TokenNode op1 = node.getChild(0)
-      TokenNode op2 = node.getChild(1)
-      optimizeNode(node, op1)
-      optimizeNode(node, op2)
-      if (isConstant(op1) && isConstant(op2)) {
+      TokenNode arg1 = node.getChild(0)
+      TokenNode arg2 = node.getChild(1)
+      optimizeNode(node, arg1)
+      optimizeNode(node, arg2)
+      if (isConstant(arg1) && isConstant(arg2)) {
         parent.replaceChild(node, new TokenNode(node, TokenNodeType.CONSTANT,
-            OPERATOR_MAP.get(node.type).call(op1.value, op2.value)))
+            OPERATOR_MAP.get(node.type).call(arg1.value, arg2.value)))
       }
     } else if (node.type.unaryOperator) {
-      TokenNode op = node.getChild(0)
-      optimizeNode(node, op)
-      if (isConstant(op)) {
+      TokenNode arg = node.getChild(0)
+      optimizeNode(node, arg)
+      if (isConstant(arg)) {
         parent.replaceChild(node, new TokenNode(node, TokenNodeType.CONSTANT,
-            OPERATOR_MAP.get(node.type).call(op.value)))
+            OPERATOR_MAP.get(node.type).call(arg.value)))
       }
     }
   }
