@@ -17,18 +17,17 @@ class UnusedVariableOptimizer implements NodeOptimizer {
   @Override
   void optimizeNode(TokenNode parent, TokenNode function) {
     Set<String> usedVariables = new HashSet<>()
-    for (int i = 0; i < function.nbChildren(); i++) {
-      usedVariables.addAll(checkVarRefs(function.getChild(i)))
-    }
+    //get the name of all used variables (skip argument variable declarations)
+    usedVariables.addAll(getVarRefs(function.getChild(function.nbChildren() - 1)))
 
+    //unused variables are declared variables not in usedVariables
     List<TokenNode> unusedVarDecls = varDecls.findAll { varDecl -> !(varDecl.value in usedVariables) }
     for (def toRemove : unusedVarDecls) {
       parent.remove(toRemove)
     }
   }
 
-
-  private Set<TokenNode> checkVarRefs(TokenNode node) {
+  private Set<TokenNode> getVarRefs(TokenNode node) {
     if (node.type == TokenNodeType.VAR_DECL) {
       varDecls.add(node)
       return Collections.emptySet()
@@ -37,7 +36,7 @@ class UnusedVariableOptimizer implements NodeOptimizer {
     } else {
       Set<TokenNode> result = new HashSet<>()
       for (int i = 0; i < node.nbChildren(); i++) {
-        result.addAll(checkVarRefs(node.getChild(i)))
+        result.addAll(getVarRefs(node.getChild(i)))
       }
       return result
     }
