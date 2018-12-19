@@ -62,6 +62,10 @@ class TokenNode extends AbstractToken {
     return children.remove(node)
   }
 
+  void removeAllChildren() {
+    children.clear()
+  }
+
   int nbChildren() {
     return children.size()
   }

@@ -1,8 +1,5 @@
 package com.tambapps.compiler.analyzer.token
 
-import groovy.transform.PackageScope
-
-@PackageScope
 abstract class AbstractToken {
 
   final int l
