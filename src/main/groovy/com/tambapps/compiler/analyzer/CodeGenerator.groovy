@@ -1,6 +1,5 @@
 package com.tambapps.compiler.analyzer
 
-import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 
@@ -93,7 +92,7 @@ class CodeGenerator {
           genCode(node.getChild(0).getChild(0))
           genCode(node.getChild(1))
           println("write")
-        } else if (node.getChild(0).type == TokenNodeType.VAR_REF){
+        } else if (node.getChild(0).type == TokenNodeType.VAR_REF) {
           genCode(node.getChild(1))
           println("dup")
           TokenNode nodeChild = node.getChild(0)

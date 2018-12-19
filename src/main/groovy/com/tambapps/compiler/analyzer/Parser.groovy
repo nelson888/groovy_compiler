@@ -46,7 +46,7 @@ class Parser { //Syntax analyzer
                 accept(TokenType.PARENT_CLOSE)
                 return N
             } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //tab[n]
-              TokenNode N = new TokenNode(t, TokenNodeType.TAB_REF, [new TokenNode(accept(TokenType.CONSTANT))])
+              TokenNode N = new TokenNode(t, TokenNodeType.TAB_REF, [expression()])
               accept(TokenType.PARENT_CLOSE)
               return N
             }
