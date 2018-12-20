@@ -36,7 +36,7 @@ class SemanticAnalyzer {
         break
 
       case TokenNodeType.D_REF:
-
+        //TODO
 
       case TokenNodeType.BLOC:
         dequeMap.newBlock()

@@ -9,7 +9,7 @@ class TokenNode extends AbstractToken {
     this(token, type, token.value)
   }
 
-  TokenNode(Token token, TokenNodeType type, def value) {
+  TokenNode(AbstractToken token, TokenNodeType type, def value) {
     super(token.l, token.c, value)
     if (type == null) {
       throw new IllegalArgumentException("$type cannot bu null")
@@ -46,6 +46,24 @@ class TokenNode extends AbstractToken {
       throw new IndexOutOfBoundsException("Leaf $i doesn't exist")
     }
     return children.get(i)
+  }
+
+  boolean replaceChild(TokenNode child, TokenNode newChild) {
+    for (int i = 0; i < nbChildren(); i++) {
+      if (getChild(i) == child) {
+        children.set(i, newChild)
+        return true
+      }
+    }
+    return false
+  }
+
+  boolean remove(TokenNode node) {
+    return children.remove(node)
+  }
+
+  void removeAllChildren() {
+    children.clear()
   }
 
   int nbChildren() {

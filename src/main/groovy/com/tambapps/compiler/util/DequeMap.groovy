@@ -29,7 +29,7 @@ class DequeMap {
   Symbol newSymbol(String ident) {
     def map = symbolsMap.peek()
     if (map.containsKey(ident)) {
-      throw new SymbolException("Already defined variable")
+      throw new SymbolException("$ident is already defined")
     }
     Symbol s = new Symbol(ident)
     map.put(ident, s)
@@ -42,7 +42,7 @@ class DequeMap {
         return map.get(ident)
       }
     }
-    throw new SymbolException("Symbol not found")
+    throw new SymbolException("Symbol not $ident found")
   }
 
   Symbol findSymbolWithSlot(int slot) {
