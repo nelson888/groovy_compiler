@@ -59,4 +59,7 @@ btnRun.addActionListener({
         { o -> console.setText(console.getText() + o + "\n") })
 })
 
+editor.setText("main() {\n  \n}")
+editor.setCaretPosition(11)
 frame.setVisible(true)
+editor.requestFocus()
