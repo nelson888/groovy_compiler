@@ -38,7 +38,7 @@ class ExpressionOptimizerTest extends GroovyTestCase {
     assertEquals("Should be 8", new TTN(-1), ASSIGNMENT_TOKEN.getChild(1))
   }
 
-  private void initAssignTok(TokenNode node) {
+  private static void initAssignTok(TokenNode node) {
     ASSIGNMENT_TOKEN.removeAllChildren()
 
     ASSIGNMENT_TOKEN.addChildren(VAR_TOKEN, node)
@@ -46,7 +46,6 @@ class ExpressionOptimizerTest extends GroovyTestCase {
 
   void testMulAd() {
     TokenNode plus = new TTN(TokenNodeType.PLUS_B)
-
     plus.addChildren(new TTN(TokenNodeType.MULTIPLY).withChildren(new TTN(3), new TTN(2)),
         new TTN(4))
 
