@@ -79,8 +79,8 @@ class Evaluator {
           returnValue = evaluate(returnExpression)
         }
         break
-      case TokenNodeType.FUNCTION_CALL:
-        evaluate(node) //like a procedure call
+      case TokenNodeType.FUNCTION_CALL: //like a procedure call
+        evaluate(node)
         break
       case TokenNodeType.PRINT:
         printer(evaluate(node.getChild(0)))
