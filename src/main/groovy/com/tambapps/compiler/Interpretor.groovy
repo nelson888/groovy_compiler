@@ -12,7 +12,7 @@ import com.tambapps.compiler.exception.PointerException
 import com.tambapps.compiler.exception.SemanticException
 
 if (args.length <= 0) {
-  println 'You must provide at least one file to compile'
+  println 'You must provide at least one file to run'
   return
 }
 

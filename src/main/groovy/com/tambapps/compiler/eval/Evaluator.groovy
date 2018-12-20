@@ -7,6 +7,8 @@ import com.tambapps.compiler.exception.SymbolException
 import com.tambapps.compiler.util.DequeMap
 import com.tambapps.compiler.util.Symbol
 
+import static com.tambapps.compiler.analyzer.token.TokenUtils.OPERATOR_MAP
+
 class Evaluator {
 
   private final List<TokenNode> functions
@@ -71,12 +73,6 @@ class Evaluator {
           test = evaluate(testNode)
         }
         break
-      /*
-      case TokenNodeType.INCREMENT:
-        Symbol s = dequeMap.findSymbol(node.getChild(0).value)
-        s.value++
-        break
-        */
       case TokenNodeType.RETURN:
         if (node.nbChildren() > 0) {
           TokenNode returnExpression = node.getChild(0)
@@ -102,49 +98,25 @@ class Evaluator {
   }
 
   private Integer evaluate(TokenNode e) { //evaluates an expression
+    if (e.type.isUnaryOperator()) {
+      def arg = evaluate(e.getChild(0))
+      return OPERATOR_MAP.get(e.type).call(arg)
+    } else if (e.type.binaryOperator) {
+      def arg1 = evaluate(e.getChild(0))
+      def arg2 = evaluate(e.getChild(1))
+      return OPERATOR_MAP.get(e.type).call(arg1, arg2)
+    }
     switch (e.type) {
+      case TokenNodeType.CONSTANT:
+        return e.value
       case TokenNodeType.VAR_REF:
         return dequeMap.findSymbol(e.value).value
-      case TokenNodeType.PLUS_U:
-        return evaluate(e.getChild(0))
-      case TokenNodeType.MINUS_U:
-        return - evaluate(e.getChild(0))
-      case TokenNodeType.MINUS_B:
-        return evaluate(e.getChild(0)) - evaluate(e.getChild(1))
-      case TokenNodeType.PLUS_B:
-        return evaluate(e.getChild(0)) + evaluate(e.getChild(1))
-
       /*
       case TokenNodeType.INCREMENT:
       case TokenNodeType.DECREMENT:
-        arg1 = evaluate(e.getChild(0));
-        return arg1;*/
-      case TokenNodeType.MULTIPLY:
-        return evaluate(e.getChild(0)) * evaluate(e.getChild(1))
-      case TokenNodeType.DIVIDE:
-        return evaluate(e.getChild(0)) / evaluate(e.getChild(1))
-      case TokenNodeType.MODULO:
-        return evaluate(e.getChild(0)) % evaluate(e.getChild(1))
-      case TokenNodeType.POWER:
-        return power(evaluate(e.getChild(0)), evaluate(e.getChild(1)))
-      case TokenNodeType.OR:
-        return intBool(evaluate(e.getChild(0)) || evaluate(e.getChild(1)))
-      case TokenNodeType.AND:
-        return intBool(evaluate(e.getChild(0)) && evaluate(e.getChild(1)))
-      case TokenNodeType.EQUAL:
-        return intBool(evaluate(e.getChild(0)) == evaluate(e.getChild(1)))
-      case TokenNodeType.NOT_EQUAL:
-        return intBool(evaluate(e.getChild(0)) != evaluate(e.getChild(1)))
-      case TokenNodeType.SUP:
-        return intBool(evaluate(e.getChild(0)) >= evaluate(e.getChild(1)))
-      case TokenNodeType.STRICT_SUP:
-        return intBool(evaluate(e.getChild(0)) > evaluate(e.getChild(1)))
-      case TokenNodeType.INF:
-        return intBool(evaluate(e.getChild(0)) <= evaluate(e.getChild(1)))
-      case TokenNodeType.STRICT_INF:
-        return intBool(evaluate(e.getChild(0)) < evaluate(e.getChild(1)))
-      case TokenNodeType.NOT:
-        return intBool(!evaluate(e.getChild(0)))
+        int arg1 = evaluate(e.getChild(0));
+        Symbol s = dequeMap.findSymbol(e.value)
+        return s.value++;*/
       case TokenNodeType.FUNCTION_CALL:
         Symbol funcData = dequeMap.findSymbol(e.value)
         TokenNode function = functions.find({ f -> funcData == f.value })
@@ -168,10 +140,6 @@ class Evaluator {
     for (Symbol symbol : symbols) {
       dequeMap.newSymbol(symbol)
     }
-  }
-
-  private int intBool(boolean b) {
-    return b ? 1 : 0
   }
 
   private Object getReturnValue() {

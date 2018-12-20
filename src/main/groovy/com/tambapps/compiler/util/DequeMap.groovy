@@ -45,6 +45,10 @@ class DequeMap {
     throw new SymbolException("Symbol not $ident found")
   }
 
+  Symbol findSymbol(def varRef) {
+    return findSymbol((String)varRef.name)
+  }
+
   Symbol findSymbolWithSlot(int slot) {
     for (def map : symbolsMap.descendingIterator()) {
       for (Symbol s : map.values()) {

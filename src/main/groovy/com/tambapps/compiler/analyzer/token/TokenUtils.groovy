@@ -10,6 +10,7 @@ class TokenUtils {
 
   static final Map<TokenType, TokenNodeType> UNARY_OPERATOR_MAP
   static final Map<TokenType, TokenNodeType> BINARY_OPERATOR_MAP
+  static final Map<TokenNodeType, Closure> OPERATOR_MAP
   static final Map<TokenType, TokenNodeType> TYPE_MAP
   static final Map<TokenType, Integer> PRIORITY_MAP
   static final Map<TokenType, Integer> ASSOCIATIVITY_MAP
@@ -66,6 +67,27 @@ class TokenUtils {
     priorityMap.put(TokenType.OR, 5)
     priorityMap.put(TokenType.ASSIGNMENT, 6)
 
+    def operatorMap = new HashMap<TokenNodeType, Closure>()
+    operatorMap.put(TokenNodeType.PLUS_B, {a1, a2 -> return a1 + a2 })
+    operatorMap.put(TokenNodeType.MULTIPLY, {a1, a2 -> return a1 * a2 })
+    operatorMap.put(TokenNodeType.MODULO, {a1, a2 -> return a1 % a2 })
+    operatorMap.put(TokenNodeType.DIVIDE, {a1, a2 -> return a1 / a2 })
+    operatorMap.put(TokenNodeType.POWER, {a1, a2 -> return power(a1, a2) })
+    operatorMap.put(TokenNodeType.MINUS_B, {a1, a2 -> return a1 - a2 })
+
+    operatorMap.put(TokenNodeType.EQUAL, {a1, a2 -> return intBool(a1 == a2) })
+    operatorMap.put(TokenNodeType.NOT_EQUAL, {a1, a2 -> return intBool(a1 != a2) })
+    operatorMap.put(TokenNodeType.STRICT_INF, {a1, a2 -> return intBool(a1 < a2) })
+    operatorMap.put(TokenNodeType.STRICT_SUP, {a1, a2 -> return intBool(a1 > a2) })
+    operatorMap.put(TokenNodeType.SUP, {a1, a2 -> return intBool(a1 >= a2) })
+    operatorMap.put(TokenNodeType.INF, {a1, a2 -> return intBool(a1 <= a2) })
+    operatorMap.put(TokenNodeType.AND, {a1, a2 -> return intBool(a1 && a2) })
+    operatorMap.put(TokenNodeType.OR, {a1, a2 -> return intBool(a1 || a2) })
+
+    operatorMap.put(TokenNodeType.MINUS_U, {a -> return - a })
+    operatorMap.put(TokenNodeType.PLUS_U, {a -> return a })
+    operatorMap.put(TokenNodeType.NOT, {a -> return intBool(!a) })
+
     //filled in the loop
     Map<TokenType, Integer> associativityMap = new HashMap<>()
     Map<String, TokenType> keywordsMap = new HashMap<>()
@@ -89,5 +111,16 @@ class TokenUtils {
     SYMBOLS_MAP = Collections.unmodifiableMap(symbolsMap)
     PRIORITY_MAP = Collections.unmodifiableMap(priorityMap)
     ASSOCIATIVITY_MAP = Collections.unmodifiableMap(associativityMap)
+    OPERATOR_MAP = Collections.unmodifiableMap(operatorMap)
   }
+
+
+  private static int intBool(boolean b) {
+    return b ? 1 : 0
+  }
+
+  private static int power(a, b) {
+    //TODO
+  }
+
 }

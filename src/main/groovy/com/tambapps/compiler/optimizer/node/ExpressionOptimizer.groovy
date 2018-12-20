@@ -1,5 +1,8 @@
 package com.tambapps.compiler.optimizer.node
 
+import static com.tambapps.compiler.analyzer.token.TokenUtils.OPERATOR_MAP
+
+
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 import groovy.transform.PackageScope
@@ -11,36 +14,9 @@ import groovy.transform.PackageScope
 @PackageScope
 class ExpressionOptimizer implements NodeOptimizer {
 
-  static final Map<TokenNodeType, Closure> OPERATOR_MAP
-
-  static {
-    def map = new HashMap<TokenNodeType, Closure>()
-    map.put(TokenNodeType.PLUS_B, {a1, a2 -> return a1 + a2 })
-    map.put(TokenNodeType.MULTIPLY, {a1, a2 -> return a1 * a2 })
-    map.put(TokenNodeType.MODULO, {a1, a2 -> return a1 % a2 })
-    map.put(TokenNodeType.DIVIDE, {a1, a2 -> return a1 / a2 })
-    map.put(TokenNodeType.POWER, {a1, a2 -> return power(a1, a2) })
-    map.put(TokenNodeType.MINUS_B, {a1, a2 -> return a1 - a2 })
-
-    map.put(TokenNodeType.EQUAL, {a1, a2 -> return intBool(a1 == a2) })
-    map.put(TokenNodeType.NOT_EQUAL, {a1, a2 -> return intBool(a1 != a2) })
-    map.put(TokenNodeType.STRICT_INF, {a1, a2 -> return intBool(a1 < a2) })
-    map.put(TokenNodeType.STRICT_SUP, {a1, a2 -> return intBool(a1 > a2) })
-    map.put(TokenNodeType.SUP, {a1, a2 -> return intBool(a1 >= a2) })
-    map.put(TokenNodeType.INF, {a1, a2 -> return intBool(a1 <= a2) })
-    map.put(TokenNodeType.AND, {a1, a2 -> return intBool(a1 && a2) })
-    map.put(TokenNodeType.OR, {a1, a2 -> return intBool(a1 || a2) })
-
-    map.put(TokenNodeType.MINUS_U, {a -> return - a })
-    map.put(TokenNodeType.PLUS_U, {a -> return a })
-    map.put(TokenNodeType.NOT, {a -> return intBool(!a) })
-
-    OPERATOR_MAP = Collections.unmodifiableMap(map)
-  }
-
   @Override
   boolean isOptimizable(TokenNodeType type) {
-    return type.isBinaryOperator() || type.isUnaryOperator()
+    return type.binaryOperator || type.unaryOperator
   }
 
   @Override
@@ -68,11 +44,4 @@ class ExpressionOptimizer implements NodeOptimizer {
     return node.type == TokenNodeType.CONSTANT
   }
 
-  private def power(a, b) {
-    //TODO
-  }
-
-  private int intBool(boolean b) {
-    return b ? 1 : 0
-  }
 }
