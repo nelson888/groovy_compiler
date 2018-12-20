@@ -34,6 +34,16 @@ class Evaluator {
         Symbol s = dequeMap.newSymbol(node.value)
         s.slot = nbSlot++
         break
+      case TokenNodeType.TAB_DECL: //1st ident, 2nd size
+        String tabName = node.getChild(0).value
+        Symbol s = dequeMap.newSymbol(tabName)
+        s.slot = nbSlot++
+        int size = evaluate(node.getChild(1))
+        for (int i = 0; i < size; i++) {
+          s = dequeMap.newSymbol(i + tabName)
+          s.slot = nbSlot++
+        }
+        break
       case TokenNodeType.BLOC:
         dequeMap.newBlock()
         for (int i = 0; i < node.nbChildren(); i++) {
@@ -47,16 +57,21 @@ class Evaluator {
         int value = evaluate(node.getChild(1))
         if (left.type == TokenNodeType.D_REF) {
           s = dequeMap.findSymbol(left.getChild(0).value)
-          try { //find symbol who's slot == s.value and modify its value
-            Symbol pointedVariable = dequeMap.findSymbolWithSlot(s.value)
-            pointedVariable.value = value
-          } catch (SymbolException e) {
+          if (s.slot > nbSlot) {
             throw new PointerException("Pointed variable with address $s.value doesn't exist")
           }
+          s = dequeMap.findSymbolWithSlot(s.value)
+        } else if (left.type == TokenNodeType.TAB_REF) {
+          int index = evaluate(node.getChild(0)) + 1 //because 0 is the tab variable itself
+          s = dequeMap.findSymbol(node.value)
+          if (s.slot + index > nbSlot) {
+            throw new PointerException("Tried to access element $index of array $e.value")
+          }
+          s = dequeMap.findSymbolWithSlot(s.slot + index)
         } else {
           s = dequeMap.findSymbol(left.value)
-          s.value = value
         }
+        s.value = value
         break
       case TokenNodeType.COND:
         TokenNode condition = node.getChild(0)
@@ -116,6 +131,15 @@ class Evaluator {
         return dequeMap.findSymbol(e.value).value
       case TokenNodeType.D_REF:
         return dequeMap.findSymbol(e.getChild(0).value).slot
+      case TokenNodeType.TAB_REF:
+        int index = evaluate(e.getChild(0)) + 1 //because 0 is the tab variable itself
+        Symbol s = dequeMap.findSymbol(e.value)
+        if (s.slot + index > nbSlot) {
+          throw new PointerException("Tried to access element $index of array $e.value")
+        }
+        Symbol pointedSymbol = dequeMap.findSymbolWithSlot(s.slot + index)
+        return pointedSymbol.value
+
       /*
       case TokenNodeType.INCREMENT:
       case TokenNodeType.DECREMENT:
