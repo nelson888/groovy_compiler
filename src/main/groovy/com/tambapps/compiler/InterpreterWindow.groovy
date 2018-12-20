@@ -19,7 +19,7 @@ import java.awt.Font
 
 frame = new JFrame()
 frame.setBounds(100, 50, 900, 700)
-frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
 
 JToolBar toolBar = new JToolBar()
 frame.getContentPane().add(toolBar, BorderLayout.NORTH)
@@ -28,38 +28,39 @@ JButton btnRun = new JButton("Execute")
 toolBar.add(btnRun)
 
 JSplitPane splitPane = new JSplitPane()
-splitPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null))
-splitPane.setOneTouchExpandable(true)
-splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
+splitPane.border = new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null)
+splitPane.oneTouchExpandable = true
+splitPane.orientation = JSplitPane.VERTICAL_SPLIT
 frame.getContentPane().add(splitPane, BorderLayout.CENTER)
 
 editor = new JTextPane()
 editor.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null))
-editor.setMinimumSize(new Dimension(0, 500))
-editor.setBackground(new Color(40, 40, 40))
-editor.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16))
-editor.setForeground(Color.WHITE)
+editor.minimumSize = new Dimension(0, 500)
+editor.background = new Color(40, 40, 40)
+editor.font = new Font(Font.SANS_SERIF, Font.BOLD, 16)
+editor.foreground = Color.WHITE
 
 scroll = new JScrollPane(editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-scroll.setPreferredSize(new Dimension(0, 500))
-splitPane.setLeftComponent(scroll)
+scroll.preferredSize = new Dimension(0, 500)
+splitPane.leftComponent = scroll
 
 console = new JTextPane()
-console.setEditable(false)
+console.editable = false
 console.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null))
-splitPane.setRightComponent(console)
+splitPane.rightComponent = console
 
 Interpreter interpreter = new Interpreter()
 btnRun.addActionListener({
   e ->
-    console.setText("")
-    interpreter.interpret(editor.getText(),
-        { o -> console.setText(console.getText() + o + "\n") })
+    console.text = ""
+    interpreter.interpret(editor.text,
+        { o -> console.text  += o + "\n" })
 })
 
-editor.setText("main() {\n  \n}")
-editor.setCaretPosition(11)
-frame.setVisible(true)
+editor.text = "main() {\n  \n}"
+editor.caretPosition = (11)
+editor.caretColor = Color.WHITE
+frame.visible = true
 editor.requestFocus()
