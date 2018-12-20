@@ -18,7 +18,7 @@ class ExpressionOptimizerTest extends GroovyTestCase {
     plus.addChildren(new TTN(4),
         new TTN(4))
 
-    initAssinTok(plus)
+    initAssignTok(plus)
     optimizer.optimizeNode(ASSIGNMENT_TOKEN, plus)
     assertEquals("Should be 8", new TTN(8), ASSIGNMENT_TOKEN.getChild(1))
   }
@@ -33,12 +33,12 @@ class ExpressionOptimizerTest extends GroovyTestCase {
         .withChildren(new TTN(TokenNodeType.MINUS_U)
         .withChildren(new TTN(1))))))
 
-    initAssinTok(plus)
+    initAssignTok(plus)
     optimizer.optimizeNode(ASSIGNMENT_TOKEN, plus)
     assertEquals("Should be 8", new TTN(-1), ASSIGNMENT_TOKEN.getChild(1))
   }
 
-  private void initAssinTok(TokenNode node) {
+  private void initAssignTok(TokenNode node) {
     ASSIGNMENT_TOKEN.removeAllChildren()
 
     ASSIGNMENT_TOKEN.addChildren(VAR_TOKEN, node)
@@ -50,7 +50,7 @@ class ExpressionOptimizerTest extends GroovyTestCase {
     plus.addChildren(new TTN(TokenNodeType.MULTIPLY).withChildren(new TTN(3), new TTN(2)),
         new TTN(4))
 
-    initAssinTok(plus)
+    initAssignTok(plus)
     optimizer.optimizeNode(ASSIGNMENT_TOKEN, plus)
     assertEquals("Should be 10", new TTN(10), ASSIGNMENT_TOKEN.getChild(1))
   }
