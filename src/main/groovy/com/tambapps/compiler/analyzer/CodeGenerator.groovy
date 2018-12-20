@@ -10,6 +10,7 @@ class CodeGenerator {
   private static final String POWER_FUNC_NAME = "power"
   public static final String PUSH_I = "push.i"
   public static final String DROP = "drop"
+  public static final String DUP = "dup"
 
   private static final Map<TokenNodeType, String> COMMAND_MAP
   static {
@@ -97,7 +98,7 @@ class CodeGenerator {
           println("write")
         } else if (node.getChild(0).type == TokenNodeType.VAR_REF) {
           genCode(node.getChild(1))
-          println("dup")
+          println(DUP)
           TokenNode nodeChild = node.getChild(0)
           println("set $nodeChild.value.index")
         }
