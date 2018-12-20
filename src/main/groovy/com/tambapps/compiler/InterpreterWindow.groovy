@@ -33,13 +33,14 @@ splitPane.setOneTouchExpandable(true)
 splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
 frame.getContentPane().add(splitPane, BorderLayout.CENTER)
 
-editorCode = new JTextPane()
-editorCode.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null))
-editorCode.setMinimumSize(new Dimension(0, 500))
-editorCode.setBackground(new Color(40, 40, 40))
-editorCode.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16))
+editor = new JTextPane()
+editor.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null))
+editor.setMinimumSize(new Dimension(0, 500))
+editor.setBackground(new Color(40, 40, 40))
+editor.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16))
+editor.setForeground(Color.WHITE)
 
-scroll = new JScrollPane(editorCode,
+scroll = new JScrollPane(editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 scroll.setPreferredSize(new Dimension(0, 500))
@@ -54,7 +55,7 @@ Interpreter interpreter = new Interpreter()
 btnRun.addActionListener({
   e ->
     console.setText("")
-    interpreter.interpret(editorCode.getText(),
+    interpreter.interpret(editor.getText(),
         { o -> console.setText(console.getText() + o + "\n") })
 })
 
