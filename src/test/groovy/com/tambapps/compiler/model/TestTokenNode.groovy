@@ -16,6 +16,10 @@ class TestTokenNode extends TokenNode {
     super(BASE_TOKEN, type, value)
   }
 
+  TestTokenNode(int value) {
+    super(BASE_TOKEN, TokenNodeType.CONSTANT, value)
+  }
+
   @Override
   boolean equals(Object o) {
     if(! (o instanceof TokenNode)) return false
