@@ -8,6 +8,9 @@ import java.util.concurrent.LinkedBlockingDeque
 class CodeGenerator {
 
   private static final String POWER_FUNC_NAME = "power"
+  public static final String PUSH_I = "push.i"
+  public static final String DROP = "drop"
+
   private static final Map<TokenNodeType, String> COMMAND_MAP
   static {
     Map<TokenNodeType, String> commandMap = new HashMap<>()
@@ -65,7 +68,7 @@ class CodeGenerator {
       }
       return
     } else if (t.isUnaryOperator()) {
-      println("push.i 0")
+      println("$PUSH_I 0")
       genCode(node.getChild(0))
       println(COMMAND_MAP.get(t))
     }
@@ -78,11 +81,11 @@ class CodeGenerator {
         }
         break
       case TokenNodeType.CONSTANT:
-        println("push.i $node.value")
+        println("$PUSH_I $node.value")
         break
       case TokenNodeType.DROP:
         genCode(node.getChild(0))
-        println("drop")
+        println(DROP)
         break
       case TokenNodeType.VAR_REF:
         println("get $node.value.index")
@@ -141,7 +144,7 @@ class CodeGenerator {
       case TokenNodeType.PRINT:
         genCode(node.getChild(0))
         println("out.i")
-        println("push.i 10")
+        println("$PUSH_I 10")
         println("out.c")
         break
       case TokenNodeType.BREAK:
@@ -159,10 +162,10 @@ class CodeGenerator {
       case TokenNodeType.FUNCTION:
         println("."+node.value.name)
         for (int i = 0; i < node.value.nbSlot; i++) {
-          println("push.i 0")
+          println("$PUSH_I 0")
         }
         genCode(node.getChild(node.nbChildren()-1))
-        println("push.i 0")
+        println("$PUSH_I 0")
         println("ret")
         break
       case TokenNodeType.FUNCTION_CALL:
