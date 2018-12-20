@@ -14,18 +14,14 @@ Note that the gradlew script was made for an Unix environment. It might not work
 ## How to run
 Once you've compiled the jar file, you can execute it with java such as below
 ```
-java -jar build/libs/compiler-1.0.jar file1 file2 file3 ...
+java -jar build/libs/interpreter-1.0.jar
 ```
 
-This programs expects a list of files as input. It will generate the compiled code in a new file
-starting with the same name as the input and ending with the '.code' extension
+This will pop a window where you can write code and execute it
+directly. A program consists of a list of functions. There has to be a main function, this is the function
+that will be executed. 
 
-## Execute compiled code
-The generated code is for a simple processor with a few basic set of instructions.
-To execute the compiled code, run
-```
-./msm file1.code
-```
+The output will be display on the console, in the bottom of the window
 
 ## What is supported (currently)
 This compiler can compile
@@ -68,7 +64,7 @@ while (i < 10) {
 You can print the value of variable with the `print` function
 
 ## Error handling
-When there is an error while compiling, the error is displayed on the standard output.
+When there is an error while compiling, the error is displayed on the console
 You can see what caused the error (the line and column of the error is displayed but it is not working, sometimes there is a little offset for the column).
 
 ##Write a program
@@ -88,3 +84,4 @@ The main() function will be executed
 
 There are some already built-in functions so you can't write a functions named:
 - power
+- malloc
