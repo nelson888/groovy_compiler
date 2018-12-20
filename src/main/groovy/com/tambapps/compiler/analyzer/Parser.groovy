@@ -33,23 +33,24 @@ class Parser { //Syntax analyzer
       case TokenType.CONSTANT:
         return new TokenNode(t)
       case TokenType.IDENTIFIER:
-            if (getCurrent().type == TokenType.PARENT_OPEN) {
-                accept(TokenType.PARENT_OPEN)
-                TokenNode N = new TokenNode(t, TokenNodeType.FUNCTION_CALL, [name: t.value])
-                while(getCurrent().type != TokenType.PARENT_CLOSE) {
-                    N.addChild(expression()) //arg of function
-                    if (getCurrent().type == TokenType.PARENT_CLOSE) {
-                        break
-                    }
-                    accept(TokenType.COMMA)
-                }
-                accept(TokenType.PARENT_CLOSE)
-                return N
-            } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //tab[n]
-              TokenNode N = new TokenNode(t, TokenNodeType.TAB_REF, [expression()])
-              accept(TokenType.PARENT_CLOSE)
-              return N
+        if (getCurrent().type == TokenType.PARENT_OPEN) {
+          accept(TokenType.PARENT_OPEN)
+          TokenNode N = new TokenNode(t, TokenNodeType.FUNCTION_CALL, [name: t.value])
+          while(getCurrent().type != TokenType.PARENT_CLOSE) {
+            N.addChild(expression()) //arg of function
+            if (getCurrent().type == TokenType.PARENT_CLOSE) {
+              break
             }
+            accept(TokenType.COMMA)
+          }
+          accept(TokenType.PARENT_CLOSE)
+          return N
+        } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //tab[n]
+          accept(TokenType.BRACKET_OPEN)
+          TokenNode N = new TokenNode(t, TokenNodeType.TAB_REF, [expression()])
+          accept(TokenType.BRACKET_CLOSE)
+          return N
+        }
         return new TokenNode(t, TokenNodeType.VAR_REF, [name: t.value])
       case TokenType.PLUS:
       case TokenType.MINUS:
@@ -107,7 +108,7 @@ class Parser { //Syntax analyzer
           return seq
         } else if (getCurrent().type == TokenType.BRACKET_OPEN) { //var tab[n];
           accept(TokenType.BRACKET_OPEN)
-          TokenNode index = new TokenNode(accept(TokenType.CONSTANT))
+          TokenNode index = expression()
           accept(TokenType.BRACKET_CLOSE)
           accept(TokenType.SEMICOLON)
           return new TokenNode(tokIdent, TokenNodeType.TAB_DECL, [tokIdent, index])
