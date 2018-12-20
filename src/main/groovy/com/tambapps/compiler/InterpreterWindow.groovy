@@ -59,8 +59,8 @@ btnRun.addActionListener({
         { o -> console.text  += o + "\n" })
 })
 
-editor.text = "main() {\n  \n}"
-editor.caretPosition = (11)
+editor.text = "main() {\n\n}"
+editor.caretPosition = (9)
 editor.caretColor = Color.WHITE
 frame.visible = true
 editor.requestFocus()
