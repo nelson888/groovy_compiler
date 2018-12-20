@@ -36,8 +36,8 @@ frame.getContentPane().add(splitPane, BorderLayout.CENTER)
 editorCode = new JTextPane()
 editorCode.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null))
 editorCode.setMinimumSize(new Dimension(0, 500))
-editorCode.setBackground(new Color(40,40,40))
-editorCode.setFont(new Font(Font.SANS_SERIF,Font.BOLD,16))
+editorCode.setBackground(new Color(40, 40, 40))
+editorCode.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16))
 
 scroll = new JScrollPane(editorCode,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -55,7 +55,7 @@ btnRun.addActionListener({
   e ->
     console.setText("")
     interpreter.interpret(editorCode.getText(),
-        {o -> console.setText(console.getText() + o + "\n" )})
+        { o -> console.setText(console.getText() + o + "\n") })
 })
 
 frame.setVisible(true)
