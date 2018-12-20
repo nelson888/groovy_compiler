@@ -15,6 +15,8 @@ class Evaluator {
   private final Closure printer
   private DequeMap dequeMap
   private Integer returnValue = null
+  private int nbSlot = 0
+
 
   Evaluator(List<TokenNode> functions, Closure printer) {
     this.functions = functions
@@ -29,7 +31,8 @@ class Evaluator {
   void process(TokenNode node) throws PointerException {
     switch (node.type) {
       case TokenNodeType.VAR_DECL:
-        dequeMap.newSymbol(node.value)
+        Symbol s = dequeMap.newSymbol(node.value)
+        s.slot = nbSlot++
         break
       case TokenNodeType.BLOC:
         dequeMap.newBlock()
@@ -111,6 +114,8 @@ class Evaluator {
         return e.value
       case TokenNodeType.VAR_REF:
         return dequeMap.findSymbol(e.value).value
+      case TokenNodeType.D_REF:
+        return dequeMap.findSymbol(e.getChild(0).value).slot
       /*
       case TokenNodeType.INCREMENT:
       case TokenNodeType.DECREMENT:

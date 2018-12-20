@@ -53,7 +53,7 @@ class DequeMap {
     for (def map : symbolsMap.descendingIterator()) {
       for (Symbol s : map.values()) {
         if (s.slot == slot) {
-          return slot
+          return s
         }
       }
     }

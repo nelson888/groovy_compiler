@@ -37,6 +37,7 @@ class Interpreter {
     try {
       List<Token> tokens = lexicalAnalyzer.toTokens(text)
       program = parser.parse(tokens)
+      print(program.treeString())
       if (optimize) {
         tkOptimizer.beforeOptimize(program)
       }
