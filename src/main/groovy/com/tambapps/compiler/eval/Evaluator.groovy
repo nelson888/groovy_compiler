@@ -1,13 +1,13 @@
 package com.tambapps.compiler.eval
 
+import static com.tambapps.compiler.analyzer.token.TokenUtils.OPERATOR_MAP
+
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 import com.tambapps.compiler.exception.PointerException
 import com.tambapps.compiler.exception.SymbolException
 import com.tambapps.compiler.util.DequeMap
 import com.tambapps.compiler.util.Symbol
-
-import static com.tambapps.compiler.analyzer.token.TokenUtils.OPERATOR_MAP
 
 class Evaluator {
 
