@@ -77,7 +77,7 @@ class Interpreter {
     try {
       evaluator.process(main)
     } catch (PointerException e) {
-      println("Pointer exception:\n$e.message")
+      printer("Pointer exception:\n$e.message")
     }
     def returnValue = evaluator.returnValue
     if (returnValue != null) {

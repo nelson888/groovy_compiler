@@ -51,7 +51,7 @@ class Evaluator {
             Symbol pointedVariable = dequeMap.findSymbolWithSlot(s.value)
             pointedVariable.value = value
           } catch (SymbolException e) {
-            throw new PointerException("Pointed variable doesn't exist")
+            throw new PointerException("Pointed variable with address $s.value doesn't exist")
           }
         } else {
           s = dequeMap.findSymbol(left.value)
