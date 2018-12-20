@@ -8,7 +8,7 @@ import com.tambapps.compiler.exception.PointerException
 import com.tambapps.compiler.exception.SymbolException
 import com.tambapps.compiler.util.DequeMap
 import com.tambapps.compiler.util.Symbol
-
+//TODO ERROR WITH ARRAYS
 class Evaluator {
 
   private final List<TokenNode> functions
