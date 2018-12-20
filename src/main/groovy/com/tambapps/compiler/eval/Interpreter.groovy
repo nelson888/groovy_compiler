@@ -11,23 +11,27 @@ import com.tambapps.compiler.exception.PointerException
 import com.tambapps.compiler.exception.SemanticException
 import com.tambapps.compiler.optimizer.node.TokenNodeOptimizer
 
-class Interpretor {
+class Interpreter {
 
+  private final LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
+  private final Parser parser = new Parser()
+  private final SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer()
+  private final TokenNodeOptimizer tkOptimizer = new TokenNodeOptimizer()
   private final boolean optimize
 
-  Interpretor(boolean optimize) {
+  Interpreter(boolean optimize) {
     this.optimize = optimize
   }
 
-  Interpretor() {
+  Interpreter() {
     this(true)
   }
 
   void interpret(String text, Closure printer) {
-    LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer()
-    Parser parser = new Parser()
-    SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer()
-    TokenNodeOptimizer tkOptimizer = new TokenNodeOptimizer()
+
+    lexicalAnalyzer.reset()
+    parser.reset()
+    semanticAnalyzer.reset()
 
     TokenNode program
     try {
@@ -74,7 +78,10 @@ class Interpretor {
     } catch (PointerException e) {
       println("Pointer exception:\n$e.message")
     }
-
+    def returnValue = evaluator.returnValue
+    if (returnValue != null) {
+      printer("Exited with value $returnValue")
+    }
   }
 }
 

@@ -142,7 +142,7 @@ class Evaluator {
     }
   }
 
-  private Object getReturnValue() {
+  Integer getReturnValue() {
     return returnValue
   }
 
@@ -155,4 +155,5 @@ class Evaluator {
     }
     return a * power(a, n - 1)
   }
+
 }
