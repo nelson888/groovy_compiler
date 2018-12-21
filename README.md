@@ -50,14 +50,14 @@ for and while loops are handled, like in the following example
 ```javascript
 var i;
 for (i = 0; i < 10; i = i + 1) {
-    print i;
+    print(i);
 }
 ```
 
 ```javascript
 var i = 0;
 while (i < 10) {
-    print i;
+    print(i);
     i = i + 1;
 }
 ```
