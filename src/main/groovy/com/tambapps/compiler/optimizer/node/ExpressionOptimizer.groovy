@@ -2,7 +2,6 @@ package com.tambapps.compiler.optimizer.node
 
 import static com.tambapps.compiler.analyzer.token.TokenUtils.OPERATOR_MAP
 
-
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.analyzer.token.TokenNodeType
 import groovy.transform.PackageScope

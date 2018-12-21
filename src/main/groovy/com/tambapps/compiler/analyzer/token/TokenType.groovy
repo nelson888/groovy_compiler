@@ -26,17 +26,17 @@ enum TokenType {
 
   boolean isBinaryOperator() {
     return Stream.of(PLUS, MINUS, DIVIDE, MULTIPLY, POWER, MODULO, EQUAL, NOT_EQUAL, STRICT_SUP, STRICT_INF, SUP, INF, AND, OR, ASSIGNMENT)
-        .anyMatch({ t -> this == t })
+        .anyMatch(this.&equals)
   }
 
   boolean isBooleanOperator() {
     return Stream.of(EQUAL, NOT_EQUAL, STRICT_SUP, STRICT_INF, SUP, INF, AND, OR, NOT)
-        .anyMatch({ t -> this == t })
+        .anyMatch(this.&equals)
   }
 
   boolean isOperator() {
     return Stream.of(PLUS, MINUS, DIVIDE, MULTIPLY, POWER, MODULO, NOT, ASSIGNMENT, EQUAL, NOT_EQUAL, STRICT_SUP, STRICT_INF, SUP, INF)
-        .anyMatch({ t -> this == t })
+        .anyMatch(this.&equals)
   }
 
   boolean isSymbol() {
@@ -45,7 +45,7 @@ enum TokenType {
 
 
   boolean isKeyWord() {
-    return value?.chars()?.allMatch({ c -> Character.isLetter(c) })
+    return value?.chars()?.allMatch(Character.&isLetter)
   }
 
   /**
@@ -55,7 +55,7 @@ enum TokenType {
    * @return
    */
   boolean isOnlySingleCharSymbol() {
-    return isSymbol() && value.length() == 1 && !Stream.of(ASSIGNMENT, STRICT_SUP, STRICT_INF, NOT).anyMatch({ t -> t == this })
+    return isSymbol() && value.length() == 1 && !Stream.of(ASSIGNMENT, STRICT_SUP, STRICT_INF, NOT).anyMatch(this.&equals)
   }
 
 }
