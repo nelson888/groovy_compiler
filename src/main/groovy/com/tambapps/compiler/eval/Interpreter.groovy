@@ -27,7 +27,7 @@ class Interpreter {
     this(true)
   }
 
-  void interpret(String text, Closure printer) {
+  void interpret(String text, final Closure println) {
 
     lexicalAnalyzer.reset()
     parser.reset()
@@ -46,16 +46,16 @@ class Interpreter {
         tkOptimizer.afterOptimize(program)
       }
     } catch (LexicalException e) {
-      printer('Error while performing lexical analysis')
-      printer("$e.message")
+      println('Error while performing lexical analysis')
+      println("$e.message")
       return
     } catch (ParsingException e) {
-      printer('Error while performing parsing')
-      printer("$e.message")
+      println('Error while performing parsing')
+      println("$e.message")
       return
     } catch (SemanticException e) {
-      printer('Error while performing semantic analysis')
-      printer("$e.message")
+      println('Error while performing semantic analysis')
+      println("$e.message")
       return
     }
 
@@ -70,18 +70,18 @@ class Interpreter {
       }
     }
     if (!main) {
-      printer("Doesn't have a main function!!!")
+      println("Doesn't have a main function!!!")
       return
     }
-    Evaluator evaluator = new Evaluator(functions, printer)
+    Evaluator evaluator = new Evaluator(functions, println)
     try {
       evaluator.process(main)
     } catch (PointerException e) {
-      printer("Pointer exception:\n$e.message")
+      println("Pointer exception:\n$e.message")
     }
     def returnValue = evaluator.returnValue
     if (returnValue != null) {
-      printer("Exited with value $returnValue")
+      println("Exited with value $returnValue")
     }
   }
 }

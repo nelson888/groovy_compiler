@@ -13,4 +13,4 @@ if (!file.exists()) {
   return
 }
 Interpreter interpreter = new Interpreter()
-//interpreter.interpret(file.text, this.&println)
+interpreter.interpret(file.text, this.&println)
