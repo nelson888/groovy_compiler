@@ -24,7 +24,7 @@ class Evaluator {
   }
 
   Evaluator(List<TokenNode> functions) {
-    this(functions, { o -> System.out.println(o) })
+    this(functions, System.out.&println)
   }
 
   void process(TokenNode node) throws PointerException {

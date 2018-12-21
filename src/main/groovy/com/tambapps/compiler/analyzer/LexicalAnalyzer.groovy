@@ -18,13 +18,9 @@ class LexicalAnalyzer {
   private static final int CONSTANT_STATE = 2
   private static final int SYMBOL_STATE = 3
 
-  private final TransitionTable transitionTable = { int currentState, char entry ->
-    nextState(currentState, entry)
-  } as TransitionTable
+  private final TransitionTable transitionTable = this.&nextState
 
-  private final ReturnTable<Token> returnTable = { int currentState, int nextState ->
-    returnValue(currentState, nextState)
-  } as ReturnTable<Token>
+  private final ReturnTable<Token> returnTable = this.&returnValue
 
   private static final Character SPACE = ' ' as Character
   private static final Character LINE_BREAK = '\n' as Character
