@@ -63,7 +63,7 @@ class Interpreter {
     TokenNode main = null
     for (int i = 0; i < program.nbChildren(); i++) {
       TokenNode function = program.getChild(i)
-      if (function.value.name.equals("main")) {
+      if (function.value.name == "main") {
         main = function
       } else {
         functions.add(function)
