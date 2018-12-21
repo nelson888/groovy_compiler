@@ -1,0 +1,19 @@
+test1() {
+  var a;
+  print(1);
+  var c;
+
+}
+_
+a,c
+__
+test2() {
+  var a = 5;
+  var c;
+  var b;
+  print(b);
+
+}
+_
+c
+__

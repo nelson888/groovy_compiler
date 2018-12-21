@@ -11,7 +11,6 @@ class ExpressionOptimizerTest extends GroovyTestCase {
 
   private ExpressionOptimizer optimizer = new ExpressionOptimizer()
 
-
   void testAdd() {
     TokenNode plus = new TTN(TokenNodeType.PLUS_B)
 
