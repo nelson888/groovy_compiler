@@ -96,7 +96,7 @@ class CodeGenerator {
           genCode(node.getChild(0).getChild(0))
           genCode(node.getChild(1))
           println("write")
-        } else if (node.getChild(0).type == TokenNodeType.VAR_REF) {
+        } else {
           genCode(node.getChild(1))
           println(DUP)
           TokenNode nodeChild = node.getChild(0)
