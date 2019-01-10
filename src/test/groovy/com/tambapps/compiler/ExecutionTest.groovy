@@ -55,6 +55,8 @@ class ExecutionTest {
                     error++
                     println("Test $file.name failed with a ${e.getClass().simpleName} exception:")
                     println(e.message)
+                } else if (exceptionHandler(e)) {
+                    success++
                 }
                 continue
             }
@@ -85,16 +87,15 @@ class ExecutionTest {
         process(TEST_FILES_FOLDER, null)
 
         println("Starting parsing exception tests")
-        File parserTests = new File(TEST_FILES_FOLDER, "parsing")
+        File parserTests = new File(TEST_FILES_FOLDER, "PARSING")
         process(parserTests, { e -> return e instanceof ParsingException })
 
-        if (true) return
         println("lexical parsing exception tests")
-        File lexicalTests = new File(TEST_FILES_FOLDER, "lexical")
+        File lexicalTests = new File(TEST_FILES_FOLDER, "LEXICAL")
         process(lexicalTests, { e -> return e instanceof LexicalException })
 
         println("semantic parsing exception tests")
-        File semanticTests = new File(TEST_FILES_FOLDER, "semantic")
+        File semanticTests = new File(TEST_FILES_FOLDER, "SEMANTIC")
         process(semanticTests, { e -> return e instanceof SemanticException })
     }
 
