@@ -10,49 +10,29 @@ import com.tambapps.compiler.exception.LexicalException
 import com.tambapps.compiler.exception.ParsingException
 import com.tambapps.compiler.exception.SemanticException
 
-if (args.length <= 0) {
-  println 'You must provide at least one file to compile'
-  return
-}
+class Compiler {
 
-lexicalAnalyzer = new LexicalAnalyzer()
-parser = new Parser()
-codeGenerator = new CodeGenerator()
-semanticAnalyzor = new SemanticAnalyzer()
+  private lexicalAnalyzer = new LexicalAnalyzer()
+  private parser = new Parser()
+  private codeGenerator = new CodeGenerator()
+  private semanticAnalyzor = new SemanticAnalyzer()
 
-for (String filePath : args) {
-  File file = new File(filePath)
-  if (!file.exists()) {
-    println("The file with path $filePath doesn't exits")
-    continue
-  }
-  println("Compiling $file.name...")
-  try {
-    compile(file)
-    println("Compiled successfully")
-  } catch (LexicalException e) {
-    println('Error while performing lexical analysis')
-    println("$e.message")
-  } catch (ParsingException e) {
-    println('Error while performing parsing')
-    println("$e.message")
-  } catch (SemanticException e) {
-    println('Error while performing semantic analysis')
-    println("$e.message")
+  String compile(String codeInput) throws LexicalException, ParsingException, SemanticException {
+    List<Token> tokens = lexicalAnalyzer.toTokens(codeInput)
+    TokenNode tree = parser.parse(tokens)
+    semanticAnalyzor.process(tree)
+    try {
+      return codeGenerator.compile(tree)
+    } finally {
+      lexicalAnalyzer.reset()
+      parser.reset()
+      codeGenerator.reset()
+    }
   }
 
-  println()
-  lexicalAnalyzer.reset()
-  codeGenerator.reset()
+
+  String compile(File file) throws LexicalException, ParsingException, SemanticException {
+    return compile(file.getText())
+  }
+
 }
-
-void compile(File file) throws LexicalException, ParsingException, SemanticException {
-  List<Token> tokens = lexicalAnalyzer.toTokens(file)
-  TokenNode tree = parser.parse(tokens)
-  semanticAnalyzor.process(tree)
-  String code = codeGenerator.compile(tree)
-
-  File compiled = new File(file.parentFile, file.name + '.code')
-  compiled.bytes = code.getBytes()
-}
-
