@@ -1,8 +1,15 @@
 package com.tambapps.compiler
 
+import com.tambapps.compiler.exception.LexicalException
+import com.tambapps.compiler.exception.ParsingException
+import com.tambapps.compiler.exception.SemanticException
+
 
 /**
- * EXECUTE DU CODE DANS LE FICHIER ET S'ASSURE QUE L'OUTPUT (LES PRINT) SONT BON
+ * compile and execute code in a given folder
+ * The folder has many source code and 3 directories:
+ * parsing/, lexical/, semantic/, where all tests in each folder should raise an exception
+ * (ParsingException, LexicalException, SemanticException)
  */
 class ExecutionTest {
 
@@ -22,33 +29,43 @@ class ExecutionTest {
         return proc.getInputStream().text.trim()
     }
 
-    static void main(String[] args) {
+    static void process(File testFolder, def exceptionHandler) { //return true if right test, false otherwise
         if (!FILE.exists() && !FILE.createNewFile()) {
             throw new RuntimeException("Couldn't create test file")
         }
-        def files = TEST_FILES_FOLDER.listFiles()
-        println("${files.length - 1} tests will be executed")
 
+        int count = 0
         int success = 0
         int error = 0
-        for (File file : files) {
-            if (file == FILE) continue
+        for (File file : testFolder.listFiles()) {
+            if (file == FILE || file.isDirectory()) continue
+            count++
             String text = file.text.trim()
-            String expected = text.substring(text.lastIndexOf("\n")).trim()
-            text = text.substring(0, text.lastIndexOf("\n")).trim()
+            String expected = ""
             String output
+            if (exceptionHandler == null) { //if no exception must be thrown, the result expected is in the last line of the file
+                expected = text.substring(text.lastIndexOf("\n")).trim()
+                text = text.substring(0, text.lastIndexOf("\n")).trim()
+            }
+
             try {
                 output = executedCode(text)
             } catch (Exception e) {
-                error++
-                println("Test of file $file.name failed with a $e.class.name exception:")
-                println(e.message)
+                if (!exceptionHandler || !exceptionHandler(e)) {
+                    error++
+                    println("Test $file.name failed with a ${e.getClass().simpleName} exception:")
+                    println(e.message)
+                }
                 continue
             }
-            if (expected != output) {
+            if (exceptionHandler == null && expected != output) {
                 error++
-                println("Test of file $file.name failed:")
+                println("Test $file.name failed:")
                 println("\tExpected $expected but got $output")
+                println()
+            } else if (exceptionHandler) {
+                error++
+                println("No exception were thrown for test $file.name but one was expected")
                 println()
             } else {
                 success++
@@ -56,7 +73,29 @@ class ExecutionTest {
         }
         println()
 
+        println("$count tests were executed")
         println("$success tests were successful")
         println("$error tests failed")
+        println()
+        println()
     }
+
+    public static void main(String[] args) {
+        println("Starting tests")
+        process(TEST_FILES_FOLDER, null)
+
+        println("Starting parsing exception tests")
+        File parserTests = new File(TEST_FILES_FOLDER, "parsing")
+        process(parserTests, { e -> return e instanceof ParsingException })
+
+        if (true) return
+        println("lexical parsing exception tests")
+        File lexicalTests = new File(TEST_FILES_FOLDER, "lexical")
+        process(lexicalTests, { e -> return e instanceof LexicalException })
+
+        println("semantic parsing exception tests")
+        File semanticTests = new File(TEST_FILES_FOLDER, "semantic")
+        process(semanticTests, { e -> return e instanceof SemanticException })
+    }
+
 }
