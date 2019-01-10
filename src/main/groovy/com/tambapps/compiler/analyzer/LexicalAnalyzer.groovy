@@ -28,6 +28,7 @@ class LexicalAnalyzer {
 
   private static final Character SPACE = ' ' as Character
   private static final Character LINE_BREAK = '\n' as Character
+  private static final Character CARRIAGE_RETURN = '\r' as Character
   private static final Character TAB = '\t' as Character
   private static final Character EQUAL = '=' as Character
   private static final List<Character> SINGLE_CHAR_SYMBOLS = Arrays.stream(TokenType.values())
@@ -176,7 +177,7 @@ class LexicalAnalyzer {
   }
 
   private static boolean isInvisibleChar(char c) {
-    return c == SPACE || c == LINE_BREAK || c == TAB
+    return c == SPACE || c == LINE_BREAK || c == TAB || c == CARRIAGE_RETURN
   }
 
   private int nextState(int currentState, Character entry) {

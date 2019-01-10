@@ -15,18 +15,19 @@ class Compiler {
   private lexicalAnalyzer = new LexicalAnalyzer()
   private parser = new Parser()
   private codeGenerator = new CodeGenerator()
-  private semanticAnalyzor = new SemanticAnalyzer()
+  private semanticAnalyzer = new SemanticAnalyzer()
 
   String compile(String codeInput) throws LexicalException, ParsingException, SemanticException {
+    try {
     List<Token> tokens = lexicalAnalyzer.toTokens(codeInput)
     TokenNode tree = parser.parse(tokens)
-    semanticAnalyzor.process(tree)
-    try {
+      semanticAnalyzer.process(tree)
       return codeGenerator.compile(tree)
     } finally {
       lexicalAnalyzer.reset()
       parser.reset()
       codeGenerator.reset()
+      semanticAnalyzer.reset()
     }
   }
 

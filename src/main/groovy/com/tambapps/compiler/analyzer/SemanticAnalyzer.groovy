@@ -91,4 +91,9 @@ class SemanticAnalyzer {
     }
   }
 
+  void reset() {
+    dequeMap = new DequeMap()
+    nbSlot = 0
+  }
+
 }
