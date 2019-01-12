@@ -21,3 +21,20 @@ Il y a des fonctions précompilé (qu'on peut voir dans le fichier src/main/ress
 dans le code des fonctions avec le nom:
 - power
 - malloc
+
+
+Ce compilateur compile un programme. Un programme est une liste de fonctions,
+les unes à la suite des autres. Il faut qu'il y ait une fonction main(), sinon le compilateur
+ne compilera pas le programme et affichera un message d'erreur.
+
+Exemple de programme valide:
+
+
+add1(a) {
+  return a + 1;
+}
+
+main() {
+  print(add1(1));
+
+}
