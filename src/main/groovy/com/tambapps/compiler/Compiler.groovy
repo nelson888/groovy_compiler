@@ -7,6 +7,7 @@ import com.tambapps.compiler.analyzer.SemanticAnalyzer
 import com.tambapps.compiler.analyzer.token.Token
 import com.tambapps.compiler.analyzer.token.TokenNode
 import com.tambapps.compiler.exception.LexicalException
+import com.tambapps.compiler.exception.NoMainFuncException
 import com.tambapps.compiler.exception.ParsingException
 import com.tambapps.compiler.exception.SemanticException
 import com.tambapps.compiler.optimizer.code.CodeOptimizer
@@ -36,10 +37,11 @@ class Compiler {
     }
   }
 
-  String compile(String codeInput) throws LexicalException, ParsingException, SemanticException {
+  String compile(String codeInput) throws LexicalException, ParsingException, SemanticException, NoMainFuncException {
     try {
       List<Token> tokens = lexicalAnalyzer.toTokens(codeInput)
       TokenNode tree = parser.parse(tokens)
+      checkHasMainFunction(tree)
       if (tkOptimizer) {
         tkOptimizer.optimize(tree)
       }
@@ -57,8 +59,14 @@ class Compiler {
     }
   }
 
+  private static void checkHasMainFunction(TokenNode tree) throws NoMainFuncException {
+    for (int i=0; i < tree.nbChildren(); i++) {
+      if (tree.getChild(i).value.name == "main") return
+    }
+    throw new NoMainFuncException()
+  }
 
-  String compile(File file) throws LexicalException, ParsingException, SemanticException {
+  String compile(File file) throws LexicalException, ParsingException, SemanticException, NoMainFuncException {
     return compile(file.getText())
   }
 

@@ -1,6 +1,7 @@
 package com.tambapps.compiler
 
 import com.tambapps.compiler.exception.LexicalException
+import com.tambapps.compiler.exception.NoMainFuncException
 import com.tambapps.compiler.exception.ParsingException
 import com.tambapps.compiler.exception.SemanticException
 
@@ -32,6 +33,8 @@ for (String filePath : args) {
   } catch (SemanticException e) {
     println('Error while performing semantic analysis')
     println("$e.message")
+  } catch (NoMainFuncException e) {
+    println('Error: There is no main() function')
   }
 
   println()
