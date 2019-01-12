@@ -4,26 +4,17 @@ import com.tambapps.compiler.analyzer.token.TokenNode
 
 class TokenNodeOptimizer {
 
-  private List<NodeOptimizer> beforeOptimizers =
-      [new UnusedVariableOptimizer()]
+  private List<NodeOptimizer> optimizers = [new ExpressionOptimizer()]
 
-  private List<NodeOptimizer> afterOptimizers =
-      [new ExpressionOptimizer()]
-
-  /** optimize before semantic analysis **/
-  void beforeOptimize(TokenNode program) {
-    optimize(program, beforeOptimizers)
+  /** optimizeProgram after semantic analysis **/
+  void optimize(TokenNode program) {
+    optimizeProgram(program, optimizers)
   }
 
-  /** optimize after semantic analysis **/
-  void afterOptimize(TokenNode program) {
-    optimize(program, afterOptimizers)
-  }
-
-  private void optimize(TokenNode program, List<NodeOptimizer> optimizers) {
+  private void optimizeProgram(TokenNode program, List<NodeOptimizer> optimizers) {
     for (def optimizer : optimizers) {
       if (optimizer.isOptimizable(program.type)) {
-        optimizer.optimizeNode(program)
+        optimizer.optimizeNode(program, null)
       } else {
         optimizeWith(optimizer, program)
       }
