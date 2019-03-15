@@ -20,13 +20,6 @@ java -jar build/libs/compiler-1.0.jar file1 file2 file3 ...
 This programs expects a list of files as input. It will generate the compiled code in a new file
 starting with the same name as the input and ending with the '.code' extension
 
-## Execute compiled code
-The generated code is for a simple processor with a few basic set of instructions.
-To execute the compiled code, run
-```
-./msm file1.code
-```
-
 ## What is supported (currently)
 This compiler can compile
 
