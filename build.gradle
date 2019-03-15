@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'application'
 
-mainClassName = "com.tambapps.compiler.Compiler"
+mainClassName = "com.tambapps.compiler.CompileScript"
 version = '1.0'
 archivesBaseName = "compiler"
 
@@ -15,7 +15,7 @@ dependencies {
     // compile localGroovy()
 
     // To use a regular Groovy dependency
-    compile 'org.codehaus.groovy:groovy-all:2.5.2'
+    compile 'org.codehaus.groovy:groovy-all:2.5.5' //last stable version of Groovy
 
 }
 

@@ -2,14 +2,33 @@
 ```
 ./gradlew uberjar
 ```
-Cela va construire un fichier .jar.
+Cela va construire un fichier .jar dans le dossier build/libs/.
 
 
 
 Ce programme s'execute comme un programme java, pour l'executer, utilisez la commande
 ```
-java -jar compiler-1.0.jar file1 file2 file3 ...
+java -jar compiler-1.0.jar ./file1 ./file2 ./file3 ...
 ```
+
+WARNING
+Si vous avez une version de java inférieure ou égale à 8, il n'y a pas de problème.
+Si vous avez une version de Java supérieure ou égale à 9, vous aurez des Warnings tel que:
+'WARNING: An illegal reflective access operation has occurred'
+Mais le programme fonctionnera toujours. Dans ce cas, veillez à ce que les arguments que vous donnez
+au programme soient bien des chemins, et non des noms de fichiers. Par exemple
+
+```
+java -jar compiler-1.0.jar file1
+```
+ne marchera pas, MAIS
+```
+java -jar compiler-1.0.jar ./file1
+```
+marchera.
+
+
+
 
 Ce programme attend un ou plusieurs fichier en input.
 
